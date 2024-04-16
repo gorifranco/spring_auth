@@ -49,11 +49,10 @@ public class HomeController {
 
       Map<String, String> currentConfig = ConfigManager.getAllProperties();
       redirectAttributes.addFlashAttribute("config", currentConfig);
-      redirectAttributes.addFlashAttribute("canviCorrecte", true);
 
       RedirectView rv = new RedirectView();
       rv.setContextRelative(true);
-      rv.setUrl("/config");
+      rv.setUrl("/config?okey=true");
       return rv;
   }
   
