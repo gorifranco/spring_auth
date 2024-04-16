@@ -76,7 +76,12 @@ public class MainService {
         };
     }
 
-    public void runServide() {
+    public void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception{
+        updateDB();
+    }
+
+    public void runPeriodically() {
+        createRunnable();
         task.run();
     }
 
@@ -84,7 +89,7 @@ public class MainService {
         executor.shutdown();
     }
 
-    public void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
+    private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
 
         if (c_in.ping() && c_out.ping()) {
             c_out.setAutoCommit(false);

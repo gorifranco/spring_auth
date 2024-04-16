@@ -13,6 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.demo.config.ConfigManager;
 import com.example.demo.models.DatabaseConfig;
+import com.example.demo.services.MainService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -54,6 +55,14 @@ public class HomeController {
       rv.setContextRelative(true);
       rv.setUrl("/config?okey=true");
       return rv;
+  }
+
+  @PostMapping("run")
+  public void run(){
+    MainService mainService = new MainService();
+    if(ConfigManager.getString("run_periodically")){
+      
+    }
   }
   
 }
