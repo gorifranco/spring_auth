@@ -4,8 +4,14 @@ package com.example.demo.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,17 +33,11 @@ public class WebSecurityConfig {
   }
 
   @Autowired
-  public void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth
-      .ldapAuthentication()
-        .userDnPatterns("uid={0},ou=people")
-        .groupSearchBase("ou=groups")
-        .contextSource()
-          .url("ldap://localhost:8389/dc=springframework,dc=org")
-          .and()
-        .passwordCompare()
-          .passwordEncoder(new BCryptPasswordEncoder())
-          .passwordAttribute("userPassword");
+  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+      auth
+          .inMemoryAuthentication()
+          .withUser("admin")
+          .password("{bcrypt}$2a$10$MHEtjV/agkmHsfcK899gvuE83KGNk.vcTwxxW.It0OQ.yW14MbuvS")
+          .roles("ADMIN");
   }
-
 }
