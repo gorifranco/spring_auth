@@ -21,6 +21,7 @@ public class WebSecurityConfig {
         .anyRequest().fullyAuthenticated()
       )
       .formLogin(Customizer.withDefaults());
+      
 
     return http.build();
   }
