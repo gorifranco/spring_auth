@@ -3,7 +3,6 @@ package com.example.demo.services;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,15 +22,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CustomConnection {
 
     private Properties properties;
-    private DDBBTypes ddbbType;
+    private String ddbbType;
     private Connection connection;
     private String jsonUrl;
     private ArrayList<HashMap<String, String>> data;
     private boolean jsonIsFile;
 
-    public CustomConnection(Properties properties, DDBBTypes ddbbType) {
+    public CustomConnection(Properties properties) {
         this.properties = properties;
-        this.ddbbType = ddbbType;
+        this.ddbbType = properties.getProperty("type");
         try {
             connect();
         } catch (Exception e) {
@@ -41,21 +40,21 @@ public class CustomConnection {
     private void connect() throws SQLException {
         String url = "";
         switch (ddbbType) {
-            case MYSQL: {
+            case "mysql": {
                 url = "jdbc:mysql://" + properties.getProperty("host") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 this.connection = DriverManager.getConnection(url);
             }
                 break;
-            case POSTGRESQL: {
+            case "postgresql": {
                 url = "jdbc:postgresql://" + properties.getProperty("host") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 this.connection = DriverManager.getConnection(url);
             }
                 break;
-            case JSON: {
+            case "json": {
                 this.jsonUrl = properties.getProperty("url");
                 this.jsonIsFile = isURL(this.jsonUrl);
             }
@@ -67,10 +66,10 @@ public class CustomConnection {
 
     public boolean ping() throws Exception {
         switch (ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 return connection.isValid(2000);
-            case JSON: {
+            case "json": {
                 if (jsonIsFile) {
                     File file = new File(jsonUrl);
                     return (file.exists() ? true : false);
@@ -85,11 +84,11 @@ public class CustomConnection {
 
     public void extractData() throws SQLException {
         switch (ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 this.data = getAllDataSql();
                 break;
-            case JSON:
+            case "json":
                 this.data = getAllDataJSON();
             default:
                 break;
@@ -98,10 +97,10 @@ public class CustomConnection {
 
     public long insertData() throws StreamWriteException, DatabindException, IOException, SQLException {
         switch (ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 return insertDataSql(data);
-            case JSON:
+            case "json":
                 return insertDataJson(data);
             default:
                 return -1;
@@ -202,7 +201,6 @@ public class CustomConnection {
             connection.setConnectTimeout(timeout);
             connection.setReadTimeout(timeout);
             int responseCode = connection.getResponseCode();
-            // Se considera que cualquier respuesta 2xx es OK
             return (200 <= responseCode && responseCode <= 299);
         } catch (Exception e) {
             System.err.println("Error al hacer ping a la URL: " + e.getMessage());
@@ -212,8 +210,8 @@ public class CustomConnection {
 
     public void setAutoCommit(boolean b) throws SQLException {
         switch (this.ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 this.connection.setAutoCommit(b);
                 break;
             default:
@@ -224,8 +222,8 @@ public class CustomConnection {
 
     public void commit() throws SQLException {
         switch (this.ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 this.connection.commit();
                 break;
             default:
@@ -235,8 +233,8 @@ public class CustomConnection {
 
     public void rollback() throws SQLException {
         switch (this.ddbbType) {
-            case MYSQL:
-            case POSTGRESQL:
+            case "mysql":
+            case "postgresql":
                 this.connection.rollback();
                 break;
             default:
