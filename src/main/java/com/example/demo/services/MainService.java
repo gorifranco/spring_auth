@@ -2,6 +2,7 @@ package com.example.demo.services;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Properties;
@@ -49,7 +50,7 @@ public class MainService {
         this.prop_in.setProperty("type", ConfigManager.getString("ddbb_out_type"));
     }
 
-    private void createRunnable() {
+    private void createRunnable(){
         task = new Runnable() {
             @Override
             public void run() {
@@ -67,8 +68,10 @@ public class MainService {
                             delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
                     }
                     updateDB();
+                    nextExecution();
+                    ConfigManager.setString("next_execution", "no");
                 }catch(Exception e){
-                    
+                    e.printStackTrace();
                 }finally {
                     executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                 }
@@ -76,8 +79,31 @@ public class MainService {
         };
     }
 
+    private void nextExecution(){
+        String timeUnit = ConfigManager.getString("time_unit");
+        int timeInterval = Integer.parseInt(ConfigManager.getString("time_interval"));
+
+        LocalDate currentDate = LocalDate.now();
+        LocalDate futureDate = currentDate;
+        switch (timeUnit.toLowerCase()) {
+            case "day":
+                futureDate = currentDate.plusDays(timeInterval);
+                break;
+            case "month":
+                futureDate = currentDate.plusMonths(timeInterval);
+                break;
+            case "year":
+                futureDate = currentDate.plusYears(timeInterval);
+                break;               
+        }
+
+        ConfigManager.setString("next_execution", futureDate.toString());
+
+    }
+
     public void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception{
         updateDB();
+        ConfigManager.setString("next_execution", "no");
     }
 
     public void runPeriodically() {
@@ -87,6 +113,7 @@ public class MainService {
 
     public void stopService() {
         executor.shutdown();
+        ConfigManager.setString("next_execution", "no");
     }
 
     private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {

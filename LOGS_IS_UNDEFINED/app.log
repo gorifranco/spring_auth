@@ -1,0 +1,104 @@
+2024-04-17 09:08:10 [main] INFO  com.example.demo.DemoApplication - Starting DemoApplication using Java 17.0.10 with PID 18332 (P:\projecte\auth\demo\target\classes started by Gregori in P:\projecte\auth\demo)
+2024-04-17 09:08:10 [main] INFO  com.example.demo.DemoApplication - No active profile set, falling back to 1 default profile: "default"
+2024-04-17 09:08:11 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2024-04-17 09:08:11 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-17 09:08:11 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-04-17 09:08:11 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-17 09:08:11 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2024-04-17 09:08:11 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1423 ms
+2024-04-17 09:08:12 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+2024-04-17 09:08:12 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@718fd7c1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4bc6da03, org.springframework.security.web.context.SecurityContextHolderFilter@481558ce, org.springframework.security.web.header.HeaderWriterFilter@6411504a, org.springframework.web.filter.CorsFilter@4f59a516, org.springframework.security.web.csrf.CsrfFilter@e91b4f4, org.springframework.security.web.authentication.logout.LogoutFilter@33e434c8, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@1376883, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@474179fa, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@4e22368c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7f353a0f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7ea2412c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@411cd156, org.springframework.security.web.access.ExceptionTranslationFilter@2091833, org.springframework.security.web.access.intercept.AuthorizationFilter@7f0b93b4]
+2024-04-17 09:08:12 [main] INFO  o.s.l.c.s.AbstractContextSource - Property 'userDn' not set - anonymous context will be used for read-only operations
+2024-04-17 09:08:13 [main] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 2c4399be-1e0c-491e-bae2-8ea9af04e859
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-04-17 09:08:13 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2024-04-17 09:08:13 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2024-04-17 09:08:13 [main] INFO  com.example.demo.DemoApplication - Started DemoApplication in 3.264 seconds (process running for 3.608)
+2024-04-17 09:11:13,636 ERROR org.springframework.boot.SpringApplication [main] Application run failed
+java.lang.IllegalStateException: java.lang.IllegalStateException: Logback configuration error detected: 
+ERROR in ch.qos.logback.classic.pattern.ClassOfCallerConverter@625abb97 - failed to parse integer string [1.] java.lang.NumberFormatException: For input string: "1."
+ERROR in ch.qos.logback.classic.pattern.ClassOfCallerConverter@5b1f29fa - failed to parse integer string [1.] java.lang.NumberFormatException: For input string: "1."
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:347)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:298)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:246)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:223)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+	at java.base/java.lang.Iterable.forEach(Unknown Source)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+	at com.example.demo.DemoApplication.main(DemoApplication.java:10)
+Caused by: java.lang.IllegalStateException: Logback configuration error detected: 
+ERROR in ch.qos.logback.classic.pattern.ClassOfCallerConverter@625abb97 - failed to parse integer string [1.] java.lang.NumberFormatException: For input string: "1."
+ERROR in ch.qos.logback.classic.pattern.ClassOfCallerConverter@5b1f29fa - failed to parse integer string [1.] java.lang.NumberFormatException: For input string: "1."
+	at org.springframework.boot.logging.logback.LogbackLoggingSystem.reportConfigurationErrorsIfNecessary(LogbackLoggingSystem.java:277)
+	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:255)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithConventions(AbstractLoggingSystem.java:81)
+	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:61)
+	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:189)
+	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:332)
+	... 19 common frames omitted
+	Suppressed: java.lang.NumberFormatException: For input string: "1."
+		at java.base/java.lang.NumberFormatException.forInputString(Unknown Source)
+		at java.base/java.lang.Integer.parseInt(Unknown Source)
+		at java.base/java.lang.Integer.parseInt(Unknown Source)
+		at ch.qos.logback.classic.pattern.NamedConverter.start(NamedConverter.java:92)
+		at ch.qos.logback.core.pattern.ConverterUtil.startConverters(ConverterUtil.java:37)
+		at ch.qos.logback.core.pattern.ConverterUtil.startConverters(ConverterUtil.java:33)
+		at ch.qos.logback.core.pattern.PatternLayoutBase.start(PatternLayoutBase.java:90)
+		at ch.qos.logback.core.model.processor.ImplicitModelHandler.postHandleComplex(ImplicitModelHandler.java:208)
+		at ch.qos.logback.core.model.processor.ImplicitModelHandler.postHandle(ImplicitModelHandler.java:186)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:257)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.traversalLoop(DefaultProcessor.java:90)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.process(DefaultProcessor.java:106)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.processModel(GenericXMLConfigurator.java:208)
+		at org.springframework.boot.logging.logback.SpringBootJoranConfigurator.processModel(SpringBootJoranConfigurator.java:122)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:170)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:122)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:65)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:287)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.lambda$loadConfiguration$1(LogbackLoggingSystem.java:249)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.withLoggingSuppressed(LogbackLoggingSystem.java:467)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:244)
+		... 23 common frames omitted
+	Suppressed: java.lang.NumberFormatException: For input string: "1."
+		at java.base/java.lang.NumberFormatException.forInputString(Unknown Source)
+		at java.base/java.lang.Integer.parseInt(Unknown Source)
+		at java.base/java.lang.Integer.parseInt(Unknown Source)
+		at ch.qos.logback.classic.pattern.NamedConverter.start(NamedConverter.java:92)
+		at ch.qos.logback.core.pattern.ConverterUtil.startConverters(ConverterUtil.java:37)
+		at ch.qos.logback.core.pattern.PatternLayoutBase.start(PatternLayoutBase.java:90)
+		at ch.qos.logback.classic.encoder.PatternLayoutEncoder.start(PatternLayoutEncoder.java:28)
+		at ch.qos.logback.core.model.processor.ImplicitModelHandler.postHandleComplex(ImplicitModelHandler.java:208)
+		at ch.qos.logback.core.model.processor.ImplicitModelHandler.postHandle(ImplicitModelHandler.java:186)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:257)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.secondPhaseTraverse(DefaultProcessor.java:253)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.traversalLoop(DefaultProcessor.java:90)
+		at ch.qos.logback.core.model.processor.DefaultProcessor.process(DefaultProcessor.java:106)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.processModel(GenericXMLConfigurator.java:208)
+		at org.springframework.boot.logging.logback.SpringBootJoranConfigurator.processModel(SpringBootJoranConfigurator.java:122)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:170)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:122)
+		at ch.qos.logback.core.joran.GenericXMLConfigurator.doConfigure(GenericXMLConfigurator.java:65)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:287)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.lambda$loadConfiguration$1(LogbackLoggingSystem.java:249)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.withLoggingSuppressed(LogbackLoggingSystem.java:467)
+		at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:244)
+		... 23 common frames omitted
