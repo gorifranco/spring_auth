@@ -1,129 +1,56 @@
 package com.example.demo.services;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Properties;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
-import com.example.demo.config.ConfigManager;
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.example.demo.models.PoolConfig;
 
 public class MainService {
 
-    CustomConnection c_in;
-    CustomConnection c_out;
+    private static final Logger logger = LoggerFactory.getLogger(MainService.class);
+    
+    private static final String poolsDataFile = "src\\main\\java\\com\\example\\demo\\config\\pools.data";
+    private static ArrayList<CustomPool> pools;
+    
 
-    Properties prop_in;
-    Properties prop_out;
-
-    private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private Runnable task;
-
-    public MainService() {
-        createProperties();
-        c_in = new CustomConnection(prop_in);
-        c_out = new CustomConnection(prop_out);
-
+    public static CustomPool getPool(int id) {
+        return pools.get(id);
     }
 
-    private void createProperties() {
-        this.prop_in = new Properties();
-        this.prop_in.setProperty("host", ConfigManager.getString("ddbb_in_host"));
-        this.prop_in.setProperty("user", ConfigManager.getString("ddbb_in_user"));
-        this.prop_in.setProperty("password", ConfigManager.getString("ddbb_in_password"));
-        this.prop_in.setProperty("port", ConfigManager.getString("ddbb_in_port"));
-        this.prop_in.setProperty("schema", ConfigManager.getString("ddbb_in_schema"));
-        this.prop_in.setProperty("type", ConfigManager.getString("ddbb_in_type"));
-
-        this.prop_out = new Properties();
-        this.prop_out.setProperty("url", ConfigManager.getString("ddbb_out_url"));
-        this.prop_out.setProperty("user", ConfigManager.getString("ddbb_out_user"));
-        this.prop_out.setProperty("password", ConfigManager.getString("ddbb_out_password"));
-        this.prop_out.setProperty("port", ConfigManager.getString("ddbb_out_port"));
-        this.prop_out.setProperty("table", ConfigManager.getString("ddbb_out_table"));
-        this.prop_in.setProperty("type", ConfigManager.getString("ddbb_out_type"));
+    public static void init() {
+        pools = new ArrayList<>();
+        loadData();
     }
 
-    private void createRunnable(){
-        task = new Runnable() {
-            @Override
-            public void run() {
-                long delay = 0;
-                try {
-                    ZonedDateTime now = ZonedDateTime.now();
-                    String time_unit = ConfigManager.getString("time_unit");
-                    long time_interval = ConfigManager.getLong("time_interval");
-                    switch (time_unit) {
-                        case "day":
-                            delay = now.until(now.plusDays(time_interval), ChronoUnit.MILLIS);
-                        case "month":
-                            delay = now.until(now.plusMonths(time_interval), ChronoUnit.MILLIS);
-                        case "year":
-                            delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
-                    }
-                    updateDB();
-                    nextExecution();
-                    ConfigManager.setString("next_execution", "no");
-                }catch(Exception e){
-                    e.printStackTrace();
-                }finally {
-                    executor.schedule(this, delay, TimeUnit.MILLISECONDS);
-                }
+    private static void loadData() {
+        File poolsData = new File(poolsDataFile);
+        if(poolsData.exists() && poolsData.length() > 0){
+
+        }
+    }
+
+    public static void saveData() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(poolsDataFile))) {
+            for (CustomPool pool : pools) {
+                bw.write(pool.getDatabaseConfig().toString());
             }
-        };
-    }
-
-    private void nextExecution(){
-        String timeUnit = ConfigManager.getString("time_unit");
-        int timeInterval = Integer.parseInt(ConfigManager.getString("time_interval"));
-
-        LocalDate currentDate = LocalDate.now();
-        LocalDate futureDate = currentDate;
-        switch (timeUnit.toLowerCase()) {
-            case "day":
-                futureDate = currentDate.plusDays(timeInterval);
-                break;
-            case "month":
-                futureDate = currentDate.plusMonths(timeInterval);
-                break;
-            case "year":
-                futureDate = currentDate.plusYears(timeInterval);
-                break;               
-        }
-
-        ConfigManager.setString("next_execution", futureDate.toString());
-
-    }
-
-    public void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception{
-        updateDB();
-        ConfigManager.setString("next_execution", "no");
-    }
-
-    public void runPeriodically() {
-        createRunnable();
-        task.run();
-    }
-
-    public void stopService() {
-        executor.shutdown();
-        ConfigManager.setString("next_execution", "no");
-    }
-
-    private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
-
-        if (c_in.ping() && c_out.ping()) {
-            c_out.setAutoCommit(false);
-
-            c_in.extractData();
-            c_out.insertData();
-            c_out.commit();
+        } catch(IOException e){
+            logger.error(e.getMessage());
         }
     }
+
+    public static void createPool(PoolConfig dbconf) {
+        pools.add(new CustomPool(dbconf));
+    }
+
+    public static ArrayList<CustomPool> getPools() {
+        return pools;
+    }
+
 }

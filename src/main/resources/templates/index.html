@@ -32,6 +32,24 @@
             <h1 class="text-center title mt-5">Menú principal</h1>
             <div class="row mt-5">
                 <div class="container text-center">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Estat</th>
+                                <th>Nom</th>
+                                <th>Descripció</th>
+                                <th>Pròxima execució</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="connexio: ${connexions}">
+                                <td th:text="${connexio.estat}" ></td>
+                                <td th:text="${connexio.nom}" ></td>
+                                <td th:text="${connexio.descripcio}" ></td>
+                                <td th:text="${connexio.proximaExecucio}" ></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div style="display: flex;">
                         <button type="button" class="btn btn-success" id="run">Run</button>
                         <div id="loader"></div>

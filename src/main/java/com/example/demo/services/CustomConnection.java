@@ -241,4 +241,8 @@ public class CustomConnection {
                 break;
         }
     }
+
+    public void clearData(){
+        this.data = null;
+    }
 }

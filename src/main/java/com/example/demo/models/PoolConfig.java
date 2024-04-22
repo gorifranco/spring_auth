@@ -1,38 +1,43 @@
 package com.example.demo.models;
 
-public class DatabaseConfig {
+public class PoolConfig {
     
     private String ddbb_in_url;
     private String ddbb_in_type;
     private String ddbb_in_user;
     private String ddbb_in_password;
     private String ddbb_in_port;
-
     private String ddbb_in_schema;
+    private String ddbb_in_table;
+
     private String ddbb_out_url;
     private String ddbb_out_type;
     private String ddbb_out_user;
     private String ddbb_out_password;
-
     private String ddbb_out_port;
     private String ddbb_out_schema;
+    private String ddbb_out_table;
+
     private String periodically_execution;
     private String time_interval; 
     private String time_unit;
 
     private String mail_account;
     private String send_mail;
+    private String name;
+    private String description;
 
 
-    public DatabaseConfig() {
+    public PoolConfig() {
     }
 
     
-    public DatabaseConfig(String ddbb_in_url, String ddbb_in_type, String ddbb_in_user, String ddbb_in_password,
+    public PoolConfig(String ddbb_in_url, String ddbb_in_type, String ddbb_in_user, String ddbb_in_password,
  String ddbb_in_port, String ddbb_in_schema, String ddbb_out_url,
             String ddbb_out_type, String ddbb_out_user, String ddbb_out_password,
             String ddbb_out_port, String ddbb_out_schema, String periodically_execution,
             String time_interval, String time_unit, String mail_account, String send_mail) {
+
         this.ddbb_in_url = ddbb_in_url;
         this.ddbb_in_type = ddbb_in_type;
         this.ddbb_in_user = ddbb_in_user;
@@ -52,6 +57,45 @@ public class DatabaseConfig {
         this.send_mail = send_mail;
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    public String getDdbb_in_table() {
+        return ddbb_in_table;
+    }
+
+
+    public void setDdbb_in_table(String ddbb_in_table) {
+        this.ddbb_in_table = ddbb_in_table;
+    }
+
+
+    public String getDdbb_out_table() {
+        return ddbb_out_table;
+    }
+
+
+    public void setDdbb_out_table(String ddbb_out_table) {
+        this.ddbb_out_table = ddbb_out_table;
+    }
 
 
     public String getMail_account() {

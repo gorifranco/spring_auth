@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.example.demo.config.ConfigManager;
 import com.example.demo.logs.CustomLogManager;
-import com.example.demo.models.DatabaseConfig;
+import com.example.demo.models.PoolConfig;
+import com.example.demo.services.CustomPool;
 import com.example.demo.services.MainService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,10 +33,12 @@ public class HomeController {
 
   @GetMapping("/")
   public String index(Model model) {
-    try{
-          model.addAttribute("logs", CustomLogManager.returnReverseLogHTML());
-          model.addAttribute("last_log", CustomLogManager.getLastLog());
-    }catch(Exception e){
+
+    try {
+      model.addAttribute("connexions", MainService.getPools());
+      model.addAttribute("logs", CustomLogManager.returnReverseLogHTML());
+      model.addAttribute("last_log", CustomLogManager.getLastLog());
+    } catch (Exception e) {
       logger.warn("logs", "No s'han pogut carregar els logs de l'aplicació");
       model.addAttribute("logs", "No s'han pogut carregar els logs de l'aplicació");
     }
@@ -51,7 +54,7 @@ public class HomeController {
   }
 
   @PostMapping("/canviaConfiguracio")
-  public RedirectView canviaConfiguracio(@ModelAttribute DatabaseConfig databaseConfig,
+  public RedirectView canviaConfiguracio(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes) {
     ObjectMapper oMapper = new ObjectMapper();
 
@@ -82,34 +85,26 @@ public class HomeController {
     return rv;
   }
 
-  @PostMapping(value="run", produces = MediaType.APPLICATION_JSON_VALUE)
-  public String run(){
-    MainService mainService = new MainService();
-    try{
-      if(ConfigManager.getString("run_periodically").equals("yes")){
-        mainService.runPeriodically();
-
-        return "{status: \"success\"," +
-        " next_execution: \"" + ConfigManager.getString("next_execution") + "\"}";
-    }else{
-      mainService.runOnce();
-      return "{status: \"success\"," +
-              " next_execution: \"no\"}";
-    }
-    }catch(Exception e){
-      logger.warn("Error executant el servei, " + e.getStackTrace());
-      return "{error: \"" + e.getMessage() + "\"}";
-    }
+  @GetMapping(value = "run/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public String run(@PathVariable(value = "id") int id) {
+    CustomPool pool = MainService.getPool(id);
+      return pool.run(); 
   }
 
   @ResponseBody
   @GetMapping(value = "getLastLogs/{data}")
-  public String getLastLogs(@PathVariable(value="data") String data){
-    try{
-      return "{ 'log': + '" + CustomLogManager.returnLogHtmlFromTime(data) + "', 'last_log': '" + CustomLogManager.getLastLog() + "' }";
-    }catch(IOException e){
-        logger.warn("No s'ha pogut llegir l'arxiu de log, " + e.getStackTrace());
-        return "Couldn't read log file";
+  public String getLastLogs(@PathVariable(value = "data") String data) {
+    try {
+      return "{ 'log': + '" + CustomLogManager.returnLogHtmlFromTime(data) + "', 'last_log': '"
+          + CustomLogManager.getLastLog() + "' }";
+    } catch (IOException e) {
+      logger.warn("No s'ha pogut llegir l'arxiu de log, " + e.getStackTrace());
+      return "Couldn't read log file";
     }
+  }
+
+  @PostMapping(value = "new")
+  public void newPool(@ModelAttribute PoolConfig dbconf) {
+    MainService.createPool(dbconf);
   }
 }
