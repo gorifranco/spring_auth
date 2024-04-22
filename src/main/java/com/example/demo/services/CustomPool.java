@@ -27,6 +27,7 @@ public class CustomPool {
 
     public CustomPool(PoolConfig dbconf) {
         this.dbconf = dbconf;
+        System.out.println(dbconf.toString());
         createConnections();
     }
 

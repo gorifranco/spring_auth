@@ -68,15 +68,12 @@ window.onload = () => {
     })
 
     const mail = document.getElementById("send_mail")
-    const mail_account = document.getElementById("mail_account")
     const span_mail = mail.nextElementSibling
 
     mail.addEventListener("change", () => {
         if(mail.checked == true){
-            mail_account.disabled = false
             span_mail.innerText = "SI"
         }else{
-            mail_account.disabled = true
             span_mail.innerText = "NO"
         }
     })

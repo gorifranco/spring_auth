@@ -50,7 +50,7 @@ public class HomeController {
 
     ModelAndView modelAndView = new ModelAndView("config");
 
-    if (id > 0) {
+    if (id >= 0) {
       modelAndView.addObject("config", MainService.getPool(id).getDatabaseConfig());
 
     }
@@ -138,7 +138,11 @@ public class HomeController {
   }
 
   @PostMapping(value = "new")
-  public void newPool(@ModelAttribute PoolConfig dbconf) {
+  public RedirectView newPool(@ModelAttribute PoolConfig dbconf) {
     MainService.createPool(dbconf);
+    RedirectView rv = new RedirectView();
+    rv.setUrl("/");
+    return rv;
+
   }
 }

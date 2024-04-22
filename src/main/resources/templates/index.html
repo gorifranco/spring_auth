@@ -43,22 +43,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="connexio: ${connexions}">
-                                <td th:text="${connexio.estat}"></td>
-                                <td th:text="${connexio.nom}"></td>
-                                <td th:text="${connexio.descripcio}"></td>
-                                <td th:text="${connexio.proximaExecucio}"></td>
-                                <a th:href="@{'configuraPool/' + ${connexio.id}}">Editar connexió</a>
+                            <tr th:each="connexio, iterStat : ${connexions}">
+                                <td th:text="Aturat"></td>
+                                <td th:text="${connexio.getDatabaseConfig().getName()}"></td>
+                                <td th:text="${connexio.getDatabaseConfig().getDescription()}"></td>
+                                <td th:text="5"></td>
+                                <td><a th:href="@{'configuraPool/' + __${iterStat.index}__}">Editar connexió</a></td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row"><a th:href="@{configuraPool/-1}" class="btn btn-primary"
-                            style="width: 150px; height: 40px;">Afegir Connexió</a></div>
-                    <div style="display: flex;">
-                        <button type="button" class="btn btn-success" id="run">Run</button>
-                        <div id="loader"></div>
+                    <div class="row" style="margin-bottom: 40px; margin-top: 30px;"><a th:href="@{configuraPool/-1}" class="btn btn-primary"
+                            style="width: 150px; height: 40px;">Afegir Connexió</a>
                     </div>
-
                 </div>
             </div>
         </div>
