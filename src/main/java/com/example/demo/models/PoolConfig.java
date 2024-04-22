@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
-public class PoolConfig {
+import java.io.Serializable;
+
+public class PoolConfig implements Serializable{
 
     private String ddbb_in_url;
     private String ddbb_in_type;

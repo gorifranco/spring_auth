@@ -2,8 +2,12 @@ package com.example.demo.services;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -14,10 +18,9 @@ import com.example.demo.models.PoolConfig;
 public class MainService {
 
     private static final Logger logger = LoggerFactory.getLogger(MainService.class);
-    
+
     private static final String poolsDataFile = "src\\main\\java\\com\\example\\demo\\config\\pools.data";
     private static ArrayList<CustomPool> pools;
-    
 
     public static CustomPool getPool(int id) {
         return pools.get(id);
@@ -29,31 +32,46 @@ public class MainService {
     }
 
     private static void loadData() {
-        File poolsData = new File(poolsDataFile);
-        if(poolsData.exists() && poolsData.length() > 0){
+        File tmp = new File(poolsDataFile);
+        if(!tmp.exists() || tmp.length() == 0) return;
 
+        try(
+            FileInputStream fi = new FileInputStream(new File(poolsDataFile));
+			ObjectInputStream oi = new ObjectInputStream(fi);
+        ){
+            while(true){
+                pools.add(new CustomPool((PoolConfig) oi.readObject()));
+            }
+
+        } catch (IOException e) {
+            logger.error("IOException carregant connexions: " + e.getMessage());
+        } catch(ClassNotFoundException e){
+            logger.error("ClassNotFound carregant connexions: " + e.getMessage());
         }
     }
 
-    public static void saveData() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(poolsDataFile))) {
+    private static void saveData() {
+        try (FileOutputStream f = new FileOutputStream(new File(poolsDataFile));
+                ObjectOutputStream o = new ObjectOutputStream(f);) {
+
             for (CustomPool pool : pools) {
-                bw.write(pool.getDatabaseConfig().toString());
+                o.writeObject(pool.getDatabaseConfig());
             }
-        } catch(IOException e){
-            logger.error(e.getMessage());
+        } catch (IOException e) {
+            logger.error("Error guardant configuracions a l'arxiu: " + e.getMessage());
         }
     }
 
     public static void createPool(PoolConfig dbconf) {
         pools.add(new CustomPool(dbconf));
+        saveData();
     }
 
     public static ArrayList<CustomPool> getPools() {
         return pools;
     }
 
-    public static void updatePoolConfig(int id, PoolConfig poolConfig){
+    public static void updatePoolConfig(int id, PoolConfig poolConfig) {
         pools.get(id).updateConf(poolConfig);
         saveData();
     }

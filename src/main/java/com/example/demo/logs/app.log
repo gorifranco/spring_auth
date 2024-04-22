@@ -3699,3 +3699,95 @@ This generated password is for development use only. Your security configuration
 2024-04-22 14:20:58,247 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
 2024-04-22 14:20:58,248 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
 2024-04-22 14:20:58,249 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 1 ms
+2024-04-22 14:31:49,171 INFO o.s.b.StartupInfoLogger [main] Starting DemoApplication using Java 17.0.10 with PID 14840 (P:\projecte\auth\demo\target\classes started by Gregori in P:\projecte\auth\demo)
+2024-04-22 14:31:49,171 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-04-22 14:31:50,460 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-04-22 14:31:50,476 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:31:50,486 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-04-22 14:31:50,486 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-22 14:31:50,581 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-04-22 14:31:50,583 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1345 ms
+2024-04-22 14:31:50,914 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page template: index
+2024-04-22 14:31:51,064 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5f025000, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@10980560, org.springframework.security.web.context.SecurityContextHolderFilter@799f916e, org.springframework.security.web.header.HeaderWriterFilter@7fda2001, org.springframework.web.filter.CorsFilter@739e8b96, org.springframework.security.web.csrf.CsrfFilter@61ffd148, org.springframework.security.web.authentication.logout.LogoutFilter@1ca3d25b, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@149c39b, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@2251b3bc, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@19b07407, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@21de60a7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@73894c5a, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@54ffa561, org.springframework.security.web.access.ExceptionTranslationFilter@5fcd1f0a, org.springframework.security.web.access.intercept.AuthorizationFilter@61149fa5]
+2024-04-22 14:31:51,263 INFO o.s.l.c.s.AbstractContextSource [main] Property 'userDn' not set - anonymous context will be used for read-only operations
+2024-04-22 14:31:51,300 WARN o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [main] 
+
+Using generated security password: 796574eb-1e7e-44af-bb1f-b0a23a350b1f
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-04-22 14:31:51,318 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:31:51,351 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-04-22 14:31:51,351 INFO o.s.b.StartupInfoLogger [main] Started DemoApplication in 2.935 seconds (process running for 3.312)
+2024-04-22 14:31:51,367 ERROR c.e.d.s.MainService [main] null
+2024-04-22 14:33:32,737 INFO o.s.b.StartupInfoLogger [main] Starting DemoApplication using Java 17.0.10 with PID 13516 (P:\projecte\auth\demo\target\classes started by Gregori in P:\projecte\auth\demo)
+2024-04-22 14:33:32,737 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-04-22 14:33:34,167 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-04-22 14:33:34,183 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:33:34,185 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-04-22 14:33:34,185 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-22 14:33:34,252 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-04-22 14:33:34,252 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1450 ms
+2024-04-22 14:33:34,619 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page template: index
+2024-04-22 14:33:34,777 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@61149fa5, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@149c39b, org.springframework.security.web.context.SecurityContextHolderFilter@7fda2001, org.springframework.security.web.header.HeaderWriterFilter@5ff6dd3c, org.springframework.web.filter.CorsFilter@f2d890c, org.springframework.security.web.csrf.CsrfFilter@79980d8d, org.springframework.security.web.authentication.logout.LogoutFilter@4c6a4ffd, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@739265f1, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@7a9ceddf, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1a2e0d57, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@21ae657b, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@799f916e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5f025000, org.springframework.security.web.access.ExceptionTranslationFilter@2a47597, org.springframework.security.web.access.intercept.AuthorizationFilter@541bf968]
+2024-04-22 14:33:35,066 INFO o.s.l.c.s.AbstractContextSource [main] Property 'userDn' not set - anonymous context will be used for read-only operations
+2024-04-22 14:33:35,117 WARN o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [main] 
+
+Using generated security password: 7fcf16ea-0529-4ff0-a0a6-b720d22be2bc
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-04-22 14:33:35,152 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:33:35,167 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-04-22 14:33:35,167 INFO o.s.b.StartupInfoLogger [main] Started DemoApplication in 3.248 seconds (process running for 3.979)
+2024-04-22 14:33:42,101 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-5] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-22 14:33:42,101 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-5] Initializing Servlet 'dispatcherServlet'
+2024-04-22 14:33:42,101 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-5] Completed initialization in 0 ms
+2024-04-22 14:34:17,106 INFO o.s.b.StartupInfoLogger [main] Starting DemoApplication using Java 17.0.10 with PID 10596 (P:\projecte\auth\demo\target\classes started by Gregori in P:\projecte\auth\demo)
+2024-04-22 14:34:17,109 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-04-22 14:34:18,512 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-04-22 14:34:18,526 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:34:18,530 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-04-22 14:34:18,531 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-22 14:34:18,628 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-04-22 14:34:18,630 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1452 ms
+2024-04-22 14:34:18,983 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page template: index
+2024-04-22 14:34:19,146 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@30aec673, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@549ac12c, org.springframework.security.web.context.SecurityContextHolderFilter@3fbe503c, org.springframework.security.web.header.HeaderWriterFilter@28157173, org.springframework.web.filter.CorsFilter@188a5fc2, org.springframework.security.web.csrf.CsrfFilter@4dfe8b37, org.springframework.security.web.authentication.logout.LogoutFilter@64b70f41, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@49c099b, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@18dd5ed3, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1cb9ef52, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@15d0d6c9, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3ab35b9c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5a622fe8, org.springframework.security.web.access.ExceptionTranslationFilter@7698b7a4, org.springframework.security.web.access.intercept.AuthorizationFilter@54ffa561]
+2024-04-22 14:34:19,328 INFO o.s.l.c.s.AbstractContextSource [main] Property 'userDn' not set - anonymous context will be used for read-only operations
+2024-04-22 14:34:19,385 WARN o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [main] 
+
+Using generated security password: 0f061dad-fbcd-45c3-8db3-c95f8b24d688
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-04-22 14:34:19,418 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:34:19,437 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-04-22 14:34:19,437 INFO o.s.b.StartupInfoLogger [main] Started DemoApplication in 3.203 seconds (process running for 3.604)
+2024-04-22 14:34:19,471 ERROR c.e.d.s.MainService [main] null
+2024-04-22 14:34:26,018 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-22 14:34:26,018 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-04-22 14:34:26,018 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 0 ms
+2024-04-22 14:35:55,234 INFO o.s.b.StartupInfoLogger [main] Starting DemoApplication using Java 17.0.10 with PID 16332 (P:\projecte\auth\demo\target\classes started by Gregori in P:\projecte\auth\demo)
+2024-04-22 14:35:55,238 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2024-04-22 14:35:56,701 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port 8080 (http)
+2024-04-22 14:35:56,720 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:35:56,720 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2024-04-22 14:35:56,720 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-04-22 14:35:56,785 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2024-04-22 14:35:56,802 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 1475 ms
+2024-04-22 14:35:57,150 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [main] Adding welcome page template: index
+2024-04-22 14:35:57,298 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@739265f1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@58eac00e, org.springframework.security.web.context.SecurityContextHolderFilter@12f279b5, org.springframework.security.web.header.HeaderWriterFilter@4c302f38, org.springframework.web.filter.CorsFilter@6acffb2d, org.springframework.security.web.csrf.CsrfFilter@1cc8416a, org.springframework.security.web.authentication.logout.LogoutFilter@18dd5ed3, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@d54d0f5, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@576b7c74, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@61149fa5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5fcd1f0a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7e64c1a9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@149c39b, org.springframework.security.web.access.ExceptionTranslationFilter@11dcd42c, org.springframework.security.web.access.intercept.AuthorizationFilter@7eeb38b2]
+2024-04-22 14:35:57,489 INFO o.s.l.c.s.AbstractContextSource [main] Property 'userDn' not set - anonymous context will be used for read-only operations
+2024-04-22 14:35:57,535 WARN o.s.b.a.s.s.UserDetailsServiceAutoConfiguration [main] 
+
+Using generated security password: 01491a4c-7f94-46fe-9768-9745129cad52
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-04-22 14:35:57,554 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2024-04-22 14:35:57,571 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port 8080 (http) with context path ''
+2024-04-22 14:35:57,587 INFO o.s.b.StartupInfoLogger [main] Started DemoApplication in 3.168 seconds (process running for 3.575)
+2024-04-22 14:35:57,603 ERROR c.e.d.s.MainService [main] IOException carregant connexions: null
+2024-04-22 14:36:13,852 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-04-22 14:36:13,852 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2024-04-22 14:36:13,852 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 0 ms
