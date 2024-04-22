@@ -53,4 +53,9 @@ public class MainService {
         return pools;
     }
 
+    public static void updatePoolConfig(int id, PoolConfig poolConfig){
+        pools.get(id).updateConf(poolConfig);
+        saveData();
+    }
+
 }

@@ -22,7 +22,6 @@ public class PoolConfig {
     private String time_interval; 
     private String time_unit;
 
-    private String mail_account;
     private String send_mail;
     private String name;
     private String description;
@@ -53,7 +52,6 @@ public class PoolConfig {
         this.periodically_execution = periodically_execution;
         this.time_interval = time_interval;
         this.time_unit = time_unit;
-        this.mail_account = mail_account;
         this.send_mail = send_mail;
     }
 
@@ -96,19 +94,6 @@ public class PoolConfig {
     public void setDdbb_out_table(String ddbb_out_table) {
         this.ddbb_out_table = ddbb_out_table;
     }
-
-
-    public String getMail_account() {
-        return mail_account;
-    }
-
-
-
-    public void setMail_account(String mail_account) {
-        this.mail_account = mail_account;
-    }
-
-
 
     public String getSend_mail() {
         return send_mail;
@@ -279,6 +264,6 @@ this.periodically_execution = periodically_execution;
                 + ddbb_out_type + ", ddbb_out_user=" + ddbb_out_user + ", ddbb_out_password=" + ddbb_out_password
                 + ", ddbb_out_port=" + ddbb_out_port + ", ddbb_out_schema=" + ddbb_out_schema
                 + ", periodically_execution=" + periodically_execution + ", time_interval=" + time_interval
-                + ", time_unit=" + time_unit + ", mail_account=" + mail_account + ", send_mail=" + send_mail + "]";
+                + ", time_unit=" + time_unit + ", send_mail=" + send_mail + "]";
     }
 }

@@ -45,11 +45,16 @@ public class HomeController {
     return "index";
   }
 
-  @GetMapping("/config")
-  public ModelAndView config() {
-    Map<String, String> config = ConfigManager.getAllProperties();
+  @GetMapping("/configuraPool/{id}")
+  public ModelAndView config(@PathVariable(value = "id") int id) {
+
     ModelAndView modelAndView = new ModelAndView("config");
-    modelAndView.addObject("config", config);
+
+    if (id > 0) {
+      modelAndView.addObject("config", MainService.getPool(id).getDatabaseConfig());
+
+    }
+
     return modelAndView;
   }
 
@@ -85,10 +90,39 @@ public class HomeController {
     return rv;
   }
 
+  @PostMapping("/configuraPool/{id}")
+  public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
+      RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
+
+    if (databaseConfig.getPeriodically_execution() == null) {
+      databaseConfig.setPeriodically_execution("no");
+    } else {
+      databaseConfig.setPeriodically_execution("yes");
+    }
+
+    if (databaseConfig.getSend_mail() == null) {
+      databaseConfig.setSend_mail("no");
+    } else {
+      databaseConfig.setSend_mail("yes");
+    }
+
+    MainService.updatePoolConfig(id, databaseConfig);
+
+    redirectAttributes.addFlashAttribute("config", databaseConfig);
+
+    RedirectView rv = new RedirectView();
+    rv.setContextRelative(true);
+    rv.setUrl("/config?okey=true");
+
+    logger.info("Configuració canviada");
+
+    return rv;
+  }
+
   @GetMapping(value = "run/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public String run(@PathVariable(value = "id") int id) {
     CustomPool pool = MainService.getPool(id);
-      return pool.run(); 
+    return pool.run();
   }
 
   @ResponseBody

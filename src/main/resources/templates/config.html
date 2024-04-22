@@ -26,19 +26,20 @@
                 </div>
             </div>
         </nav>
-        <form method="post" id="configForm" th:action="@{/canviaConfiguracio}">
+        <form method="post" id="configForm" th:action="${config != null ? @{/canviaConfiguracio} : @{/new}}">
             <div class="container mt-5">
+                <h1 class="title text-center" th:text="${config != null ? 'Editar connexió ' + $config.nom : 'Nova connexió'}"></h1>
                 <div class="row">
                     <div class="container col-lg" style="padding: 40px">
                         <h2>BBDD d'origen</h2>
                         <div class="mb-3">
                             <label for="ddbb_in_type" class="form-label">Base de dades</label>
                             <select id="ddbb_in_type" name="ddbb_in_type" class="form-select">
-                                <option value="json" th:selected="${config.ddbb_in_type == 'json'}">json</option>
-                                <option value="postgresql" th:selected="${config.ddbb_in_type == 'postgresql'}">
+                                <option value="json" th:selected="${config != null && config.ddbb_in_type == 'json'}">json</option>
+                                <option value="postgresql" th:selected="${config != null && config.ddbb_in_type == 'postgresql'}">
                                     postgresql
                                 </option>
-                                <option value="mariadb" th:selected="${config.ddbb_in_type == 'mariadb'}">mariaDB
+                                <option value="mariadb" th:selected="${config != null && config.ddbb_in_type == 'mariadb'}">mariaDB
                                 </option>
                             </select>
                         </div>
@@ -46,19 +47,19 @@
                         <div class="mb-3">
                             <label for="ddbb_in_url" class="form-label">Ruta</label>
                             <input type="text" name="ddbb_in_url" id="ddbb_in_url" class="form-control"
-                                th:value="${config.ddbb_in_url}">
+                            th:value="${config != null ? config.ddbb_in_url : ''}">
                         </div>
 
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_in_schema" class="form-label">Nom base de dades</label>
                                 <input id="ddbb_in_schema" name="ddbb_in_schema" class="form-control"
-                                    th:value="${config.ddbb_in_schema}" th:disabled="${config.ddbb_in_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_in_schema : ''}" th:disabled="${config != null && config.ddbb_in_type == 'json'}">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_in_port" class="form-label">Port</label>
                                 <input type="text" name="ddbb_in_port" id="ddbb_in_port" class="form-control"
-                                    th:value="${config.ddbb_in_port}" th:disabled="${config.ddbb_in_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_in_port : ''}" th:disabled="${config != null && config.ddbb_in_type == 'json'}">
                             </div>
                         </div>
 
@@ -66,13 +67,13 @@
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_in_user" class="form-label">Nom d'usuari:</label>
                                 <input id="ddbb_in_user" name="ddbb_in_user" class="form-control"
-                                    th:value="${config.ddbb_in_user}" th:disabled="${config.ddbb_in_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_in_user : ''}" th:disabled="${config != null && config.ddbb_in_type == 'json'}">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_in_password" class="form-label">Contrassenya</label>
                                 <input type="password" name="ddbb_in_password" id="ddbb_in_password"
-                                    class="form-control" th:value="${config.ddbb_in_password}"
-                                    th:disabled="${config.ddbb_in_type == 'json'}">
+                                    class="form-control" th:value="${config != null ? config.ddbb_in_password : ''}"
+                                    th:disabled="${config != null && config.ddbb_in_type == 'json'}">
                             </div>
                         </div>
                     </div>
@@ -82,11 +83,11 @@
                         <div class="mb-3">
                             <label for="ddbb_out_type" class="form-label">Base de dades</label>
                             <select id="ddbb_out_type" name="ddbb_out_type" class="form-select">
-                                <option value="json" th:selected="${config.ddbb_out_type == 'json'}">json</option>
-                                <option value="postgresql" th:selected="${config.ddbb_out_type == 'postgresql'}">
+                                <option value="json" th:selected="${config != null && config.ddbb_out_type == 'json'}">json</option>
+                                <option value="postgresql" th:selected="${config != null && config.ddbb_out_type == 'postgresql'}">
                                     postgresql
                                 </option>
-                                <option value="mariadb" th:selected="${config.ddbb_out_type == 'mariadb'}">mariaDB
+                                <option value="mariadb" th:selected="${config != null && config.ddbb_out_type == 'mariadb'}">mariaDB
                                 </option>
                             </select>
                         </div>
@@ -94,20 +95,20 @@
                         <div class="mb-3">
                             <label for="ddbb_out_url" class="form-label">Ruta</label>
                             <input type="text" name="ddbb_out_url" id="ddbb_out_url" class="form-control"
-                                th:value="${config.ddbb_out_url}">
+                                th:value="${config != null ? config.ddbb_out_url : ''}">
                         </div>
 
                         <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_out_schema" class="form-label">Nom base de dades</label>
                                 <input id="ddbb_out_schema" name="ddbb_out_schema" class="form-control"
-                                    th:value="${config.ddbb_out_schema}"
-                                    th:disabled="${config.ddbb_out_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_out_schema : ''}"
+                                    th:disabled="${config != null && config.ddbb_out_type == 'json'}">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_out_port" class="form-label">Port</label>
                                 <input type="text" name="ddbb_out_port" id="ddbb_out_port" class="form-control"
-                                    th:value="${config.ddbb_out_port}" th:disabled="${config.ddbb_out_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_out_port : ''}" th:disabled="${config != null && config.ddbb_out_type == 'json'}">
                             </div>
                         </div>
 
@@ -115,13 +116,13 @@
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_out_user" class="form-label">Nom d'usuari:</label>
                                 <input id="ddbb_out_user" name="ddbb_out_user" class="form-control"
-                                    th:value="${config.ddbb_out_user}" th:disabled="${config.ddbb_out_type == 'json'}">
+                                th:value="${config != null ? config.ddbb_out_user : ''}" th:disabled="${config != null && config.ddbb_out_type == 'json'}">
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="ddbb_out_password" class="form-label">Contrassenya</label>
                                 <input type="password" name="ddbb_out_password" id="ddbb_out_password"
-                                    class="form-control" th:value="${config.ddbb_out_password}"
-                                    th:disabled="${config.ddbb_out_type == 'json'}">
+                                    class="form-control" th:value="${config != null ? config.ddbb_out_password : ''}"
+                                    th:disabled="${config != null && config.ddbb_out_type == 'json'}">
                             </div>
                         </div>
                     </div>
@@ -133,24 +134,24 @@
                         <div class="col-md-3">
                             <label for="periodically_execution">Actualitzar periòdicament?</label>
                             <input type="checkbox" id="periodically_execution" name="periodically_execution"
-                                th:checked="${config.periodically_execution == 'yes'}">
-                            <span class="mx-1" th:text="${config.periodically_execution == 'yes' ? 'SI' : 'NO'}"></span>
+                                th:checked="${config != null && config.periodically_execution == 'yes'}">
+                            <span class="mx-1" th:text="${config == null || config.periodically_execution == 'yes' ? 'SI' : 'NO'}"></span>
                         </div>
 
                         <!-- Segundo contenedor: Selección de intervalo y cantidad -->
                         <div class="row col">
                             <div class="col">
                                 <label for="time_unit">Mesura temporal</label>
-                                <select id="time_unit" class="form-select" name="time_unit" th:disabled="${config.periodically_execution == 'no'}">
-                                    <option value="day" th:selected="${config.time_unit == 'day'}">Dia</option>
-                                    <option value="month" th:selected="${config.time_unit == 'month'}">Mes</option>
-                                    <option value="year" th:selected="${config.time_unit == 'year'}">Any</option>
+                                <select id="time_unit" class="form-select" name="time_unit" th:disabled="${config == null || config.periodically_execution == 'no'}">
+                                    <option value="day" th:selected="${config != null && config.time_unit == 'day'}">Dia</option>
+                                    <option value="month" th:selected="${config != null && config.time_unit == 'month'}">Mes</option>
+                                    <option value="year" th:selected="${config != null && config.time_unit == 'year'}">Any</option>
                                 </select>
                             </div>
                             <div class="col">
                                 <label for="time_interval">Quantitat</label>
                                 <input type="number" id="time_interval" name="time_interval" min="1"
-                                    class="form-control" th:value="${config.time_interval}"  th:disabled="${config.periodically_execution == 'no'}">
+                                    class="form-control" th:value="${config != null ? config.time_interval : ''}"  th:disabled="${config == null || config.periodically_execution == 'no'}">
                             </div>
                         </div>
                     </div>
@@ -159,20 +160,16 @@
                         <div class="col-md-3">
                             <label for="send_mail">Enviar info per correu</label>
                             <input type="checkbox" id="send_mail" name="send_mail"
-                                th:checked="${config.send_mail == 'yes'}">
-                            <span class="mx-1" th:text="${config.send_mail == 'yes' ? 'SI' : 'NO'}"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="mail_account">mail</label>
-                            <input type="text" id="mail_account" name="mail_account" class="form-control"
-                                th:value="${config.mail_account}" th:disabled="${config.send_mail == 'no'}">
+                                th:checked="${config != null && config.send_mail == 'yes'}">
+                            <span class="mx-1" th:text="${config != null && config.send_mail == 'yes' ? 'SI' : 'NO'}"></span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row mt-5">
                 <div class="container text-center">
-                    <input type="submit" class="btn btn-primary" value="Guardar configuració">
+                    <a class="btn btn-warning" style="margin-right: 8px;" th:href="@{/}">Cancel·la</a>
+                    <input type="submit" class="btn btn-primary" value="Guardar">
                 </div>
             </div>
         </form>

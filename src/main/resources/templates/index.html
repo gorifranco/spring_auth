@@ -39,17 +39,21 @@
                                 <th>Nom</th>
                                 <th>Descripció</th>
                                 <th>Pròxima execució</th>
+                                <th>Editar</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="connexio: ${connexions}">
-                                <td th:text="${connexio.estat}" ></td>
-                                <td th:text="${connexio.nom}" ></td>
-                                <td th:text="${connexio.descripcio}" ></td>
-                                <td th:text="${connexio.proximaExecucio}" ></td>
+                                <td th:text="${connexio.estat}"></td>
+                                <td th:text="${connexio.nom}"></td>
+                                <td th:text="${connexio.descripcio}"></td>
+                                <td th:text="${connexio.proximaExecucio}"></td>
+                                <a th:href="@{'configuraPool/' + ${connexio.id}}">Editar connexió</a>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="row"><a th:href="@{configuraPool/-1}" class="btn btn-primary"
+                            style="width: 150px; height: 40px;">Afegir Connexió</a></div>
                     <div style="display: flex;">
                         <button type="button" class="btn btn-success" id="run">Run</button>
                         <div id="loader"></div>

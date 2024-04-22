@@ -150,4 +150,8 @@ public class CustomPool {
         return this.dbconf;
     }
 
+    public void updateConf(PoolConfig poolConfig){
+        this.dbconf = poolConfig;
+    }
+
 }
