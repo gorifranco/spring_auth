@@ -107,6 +107,21 @@
                                     th:disabled="${config == null || config.ddbb_in_type == 'json'}">
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="ddbb_in_table" class="form-label">Taula</label>
+                                <input id="ddbb_in_table" name="ddbb_in_table" class="form-control"
+                                    th:value="${config != null ? config.ddbb_in_table : ''}"
+                                    th:disabled="${config == null || config.ddbb_in_type == 'json'}">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="ddbb_in_columns" class="form-label">Columnes</label>
+                                <input type="text" name="ddbb_in_columns" id="ddbb_in_columns"
+                                    class="form-control" th:value="${config != null ? config.ddbb_in_columns : ''}"
+                                    placeholder="col1, col2, col3">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="container col-lg" style="border-left:1px solid gray; height: auto; padding: 40px;">
@@ -149,7 +164,7 @@
 
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="ddbb_out_user" class="form-label">Nom d'usuari:</label>
+                                <label for="ddbb_out_user" class="form-label">Nom d'usuari</label>
                                 <input id="ddbb_out_user" name="ddbb_out_user" class="form-control"
                                     th:value="${config != null ? config.ddbb_out_user : ''}"
                                     th:disabled="${config == null || config.ddbb_out_type == 'json'}">
@@ -159,6 +174,21 @@
                                 <input type="password" name="ddbb_out_password" id="ddbb_out_password"
                                     class="form-control" th:value="${config != null ? config.ddbb_out_password : ''}"
                                     th:disabled="${config == null || config.ddbb_out_type == 'json'}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="ddbb_out_table" class="form-label">Taula</label>
+                                <input id="ddbb_out_table" name="ddbb_out_table" class="form-control"
+                                    th:value="${config != null ? config.ddbb_out_table : ''}"
+                                    th:disabled="${config == null || config.ddbb_out_type == 'json'}">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="ddbb_out_columns" class="form-label">Columnes</label>
+                                <input type="text" name="ddbb_out_columns" id="ddbb_out_columns"
+                                    class="form-control" th:value="${config != null ? config.ddbb_out_columns : ''}"
+                                    placeholder="col1, col2, col3">
                             </div>
                         </div>
                     </div>

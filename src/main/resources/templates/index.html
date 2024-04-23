@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <main>
+    <main style="width: 100vw; overflow-x: hidden;">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse justify-content-center">
@@ -44,10 +44,10 @@
                         </thead>
                         <tbody>
                             <tr th:each="connexio, iterStat : ${connexions}">
-                                <td th:text="Aturat"></td>
+                                <td><a class="playButton" th:id="${__${iterStat.index}__}"><img src="play_svg.svg" style="height: 25px; width: 25px;"></a></td>
                                 <td th:text="${connexio.getDatabaseConfig().getName()}"></td>
                                 <td th:text="${connexio.getDatabaseConfig().getDescription()}"></td>
-                                <td th:text="5"></td>
+                                <td th:text="${connexio.getDatabaseConfig().getNextExecution()}"></td>
                                 <td><a th:href="@{'configuraPool/' + __${iterStat.index}__}">Editar connexió</a></td>
                             </tr>
                         </tbody>

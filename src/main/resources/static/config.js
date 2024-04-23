@@ -14,6 +14,7 @@ window.onload = () => {
     const ddbb_in_password = document.getElementById("ddbb_in_password")
     const ddbb_in_schema = document.getElementById("ddbb_in_schema")
     const ddbb_in_port = document.getElementById("ddbb_in_port")
+    const ddbb_in_table = document.getElementById("ddbb_in_table")
 
     const ddbb_out_select = document.getElementById("ddbb_out_type")
     const ddbb_out_url = document.getElementById("ddbb_out_url")
@@ -21,6 +22,7 @@ window.onload = () => {
     const ddbb_out_password = document.getElementById("ddbb_out_password")
     const ddbb_out_schema = document.getElementById("ddbb_out_schema")
     const ddbb_out_port = document.getElementById("ddbb_out_port")
+    const ddbb_out_table = document.getElementById("ddbb_out_table")
 
     ddbb_in_select.addEventListener("change", () => {
         if(ddbb_in_select.value == "json"){
@@ -28,11 +30,13 @@ window.onload = () => {
             ddbb_in_password.disabled = true
             ddbb_in_schema.disabled = true
             ddbb_in_port.disabled = true
+            ddbb_in_table.disabled = true
         }else{
             ddbb_in_user.disabled = false
             ddbb_in_password.disabled = false
             ddbb_in_schema.disabled = false
             ddbb_in_port.disabled = false
+            ddbb_in_table.disabled = false
         } 
     })
 
@@ -42,11 +46,13 @@ window.onload = () => {
             ddbb_out_password.disabled = true
             ddbb_out_schema.disabled = true
             ddbb_out_port.disabled = true
+            ddbb_out_table.disabled = true
         }else{
             ddbb_out_user.disabled = false
             ddbb_out_password.disabled = false
             ddbb_out_schema.disabled = false
             ddbb_out_port.disabled = false
+            ddbb_out_table.disabled = false
         } 
     })
 

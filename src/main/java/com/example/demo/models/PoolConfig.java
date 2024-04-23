@@ -11,6 +11,7 @@ public class PoolConfig implements Serializable{
     private String ddbb_in_port;
     private String ddbb_in_schema;
     private String ddbb_in_table;
+    private String ddbb_in_columns;
 
     private String ddbb_out_url;
     private String ddbb_out_type;
@@ -19,6 +20,7 @@ public class PoolConfig implements Serializable{
     private String ddbb_out_port;
     private String ddbb_out_schema;
     private String ddbb_out_table;
+    private String ddbb_out_columns;
 
     private String periodically_execution;
     private String time_interval;
@@ -27,6 +29,7 @@ public class PoolConfig implements Serializable{
     private String send_mail;
     private String name;
     private String description;
+    private String nextExecution;
 
     public PoolConfig() {
         this.ddbb_in_url = "";
@@ -49,6 +52,9 @@ public class PoolConfig implements Serializable{
         this.send_mail = "";
         this.name = "";
         this.description = "";
+        this.ddbb_in_columns = "";
+        this.ddbb_out_columns = "";
+        this.nextExecution = "";
 
     }
 
@@ -81,6 +87,24 @@ public class PoolConfig implements Serializable{
 
     public String getName() {
         return name;
+    }
+
+
+
+    public String getDdbb_in_columns() {
+        return ddbb_in_columns;
+    }
+
+    public void setDdbb_in_columns(String ddbb_in_columns) {
+        this.ddbb_in_columns = ddbb_in_columns;
+    }
+
+    public String getDdbb_out_columns() {
+        return ddbb_out_columns;
+    }
+
+    public void setDdbb_out_columns(String ddbb_out_columns) {
+        this.ddbb_out_columns = ddbb_out_columns;
     }
 
     public void setName(String name) {
@@ -243,12 +267,21 @@ public class PoolConfig implements Serializable{
     public String toString() {
         return "PoolConfig [ddbb_in_url=" + ddbb_in_url + ", ddbb_in_type=" + ddbb_in_type + ", ddbb_in_user="
                 + ddbb_in_user + ", ddbb_in_password=" + ddbb_in_password + ", ddbb_in_port=" + ddbb_in_port
-                + ", ddbb_in_schema=" + ddbb_in_schema + ", ddbb_in_table=" + ddbb_in_table + ", ddbb_out_url="
-                + ddbb_out_url + ", ddbb_out_type=" + ddbb_out_type + ", ddbb_out_user=" + ddbb_out_user
-                + ", ddbb_out_password=" + ddbb_out_password + ", ddbb_out_port=" + ddbb_out_port + ", ddbb_out_schema="
-                + ddbb_out_schema + ", ddbb_out_table=" + ddbb_out_table + ", periodically_execution="
-                + periodically_execution + ", time_interval=" + time_interval + ", time_unit=" + time_unit
-                + ", send_mail=" + send_mail + ", name=" + name + ", description=" + description + "]";
+                + ", ddbb_in_schema=" + ddbb_in_schema + ", ddbb_in_table=" + ddbb_in_table + ", ddbb_in_columns="
+                + ddbb_in_columns + ", ddbb_out_url=" + ddbb_out_url + ", ddbb_out_type=" + ddbb_out_type
+                + ", ddbb_out_user=" + ddbb_out_user + ", ddbb_out_password=" + ddbb_out_password + ", ddbb_out_port="
+                + ddbb_out_port + ", ddbb_out_schema=" + ddbb_out_schema + ", ddbb_out_table=" + ddbb_out_table
+                + ", ddbb_out_columns=" + ddbb_out_columns + ", periodically_execution=" + periodically_execution
+                + ", time_interval=" + time_interval + ", time_unit=" + time_unit + ", send_mail=" + send_mail
+                + ", name=" + name + ", description=" + description + "]";
+    }
+
+    public String getNextExecution() {
+        return nextExecution;
+    }
+
+    public void setNextExecution(String nextExecution) {
+        this.nextExecution = nextExecution;
     }
 
 }

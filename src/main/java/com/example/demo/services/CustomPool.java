@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,7 +29,6 @@ public class CustomPool {
 
     public CustomPool(PoolConfig dbconf) {
         this.dbconf = dbconf;
-        System.out.println(dbconf.toString());
         createConnections();
     }
 
@@ -40,6 +41,7 @@ public class CustomPool {
         p_in.setProperty("schema", dbconf.getDdbb_in_schema());
         p_in.setProperty("type", dbconf.getDdbb_in_type());
         p_in.setProperty("table", dbconf.getDdbb_in_table());
+        p_in.setProperty("columns", dbconf.getDdbb_in_columns());
 
         c_in = new CustomConnection(p_in);
 
@@ -49,8 +51,9 @@ public class CustomPool {
         p_out.setProperty("password", dbconf.getDdbb_out_password());
         p_out.setProperty("port", dbconf.getDdbb_out_port());
         p_out.setProperty("schema", dbconf.getDdbb_out_schema());
-        p_out.setProperty("table", dbconf.getDdbb_out_table());
         p_out.setProperty("type", dbconf.getDdbb_out_type());
+        p_out.setProperty("table", dbconf.getDdbb_out_table());
+        p_out.setProperty("columns", dbconf.getDdbb_out_columns());
 
         c_out = new CustomConnection(p_out);
     }
@@ -89,7 +92,7 @@ public class CustomPool {
                             delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
                     }
                     updateDB();
-                    nextExecution();
+                    dbconf.setNextExecution(nextExecution());
                 } catch (Exception e) {
                     System.out.println(e);
                 } finally {
@@ -122,8 +125,8 @@ public class CustomPool {
     }
 
     public void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
+        dbconf.setNextExecution("");
         updateDB();
-        ConfigManager.setString("next_execution", "no");
     }
 
     public void runPeriodically() {
@@ -141,8 +144,8 @@ public class CustomPool {
         if (c_in.ping() && c_out.ping()) {
             c_out.setAutoCommit(false);
 
-            c_in.extractData();
-            c_out.insertData();
+            ArrayList<HashMap<String, String>> data = c_in.extractData();
+            // c_out.insertData(data);
             c_out.commit();
         }
     }

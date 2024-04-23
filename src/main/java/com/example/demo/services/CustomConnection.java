@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -21,15 +24,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CustomConnection {
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomConnection.class);
+
     private Properties properties;
     private String ddbbType;
     private Connection connection;
     private String jsonUrl;
-    private ArrayList<HashMap<String, String>> data;
     private boolean jsonIsFile;
+    private String[] columns;
 
     public CustomConnection(Properties properties) {
         this.properties = properties;
+
+        columns = properties.getProperty("columns").split(",");
+
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = columns[i].trim();
+        }
+
         this.ddbbType = properties.getProperty("type");
         try {
             connect();
@@ -40,15 +52,15 @@ public class CustomConnection {
     private void connect() throws SQLException {
         String url = "";
         switch (ddbbType) {
-            case "mysql": {
-                url = "jdbc:mysql://" + properties.getProperty("host") + ":" +
+            case "mariadb": {
+                url = "jdbc:mariadb://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 this.connection = DriverManager.getConnection(url);
             }
                 break;
             case "postgresql": {
-                url = "jdbc:postgresql://" + properties.getProperty("host") + ":" +
+                url = "jdbc:postgresql://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 this.connection = DriverManager.getConnection(url);
@@ -56,7 +68,7 @@ public class CustomConnection {
                 break;
             case "json": {
                 this.jsonUrl = properties.getProperty("url");
-                this.jsonIsFile = isURL(this.jsonUrl);
+                this.jsonIsFile = !isURL(this.jsonUrl);
             }
                 break;
             default:
@@ -65,39 +77,48 @@ public class CustomConnection {
     }
 
     public boolean ping() throws Exception {
-        switch (ddbbType) {
-            case "mysql":
-            case "postgresql":
-                return connection.isValid(2000);
-            case "json": {
-                if (jsonIsFile) {
-                    File file = new File(jsonUrl);
-                    return (file.exists() ? true : false);
-                } else {
-                    return pingURL(jsonUrl, 2000);
+        boolean tmp = false;
+        try {
+            switch (ddbbType) {
+                case "mariadb":
+                case "postgresql":
+                    tmp = connection.isValid(2000);
+                    return tmp;
+                case "json": {
+                    if (jsonIsFile) {
+                        File file = new File(jsonUrl);
+                        tmp = file.exists() ? true : false;
+                        return tmp;
+                    } else {
+                        tmp = pingURL(jsonUrl, 2000);
+                        return tmp;
+                    }
                 }
+                default:
+                    throw new Exception("Fallo garrafal");
             }
-            default:
-                throw new Exception("Fallo garrafal");
+        } finally {
+            logger.info("Connection to " + properties.getProperty("url") + " : " + tmp);
         }
     }
 
-    public void extractData() throws SQLException {
+    public ArrayList<HashMap<String, String>> extractData() throws SQLException {
         switch (ddbbType) {
-            case "mysql":
+            case "mariadb":
             case "postgresql":
-                this.data = getAllDataSql();
-                break;
+                return getAllDataSql();
             case "json":
-                this.data = getAllDataJSON();
+                return getAllDataJSON();
             default:
                 break;
         }
+        return null;
     }
 
-    public long insertData() throws StreamWriteException, DatabindException, IOException, SQLException {
+    public long insertData(ArrayList<HashMap<String, String>> data)
+            throws StreamWriteException, DatabindException, IOException, SQLException {
         switch (ddbbType) {
-            case "mysql":
+            case "mariadb":
             case "postgresql":
                 return insertDataSql(data);
             case "json":
@@ -109,6 +130,7 @@ public class CustomConnection {
 
     private ArrayList<HashMap<String, String>> getAllDataSql() throws SQLException {
         try (Statement st = connection.createStatement()) {
+            logger.info("Informació Extreta de " + properties.get("name"));
             return rsToList(st.executeQuery("select * from " + properties.getProperty("table")));
         }
     }
@@ -142,10 +164,13 @@ public class CustomConnection {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            return mapper.readValue(new File(jsonUrl), new TypeReference<ArrayList<HashMap<String, String>>>() {
-            });
+            ArrayList<HashMap<String, String>> data = mapper.readValue(new File(jsonUrl),
+                    new TypeReference<ArrayList<HashMap<String, String>>>() {
+                    });
+            logger.info("Extracted data from json " + properties.getProperty("url") + ": " + data.toString());
+            return data;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error extracting data from JSON (CustomConnection ln 161): " + e.getMessage());
         }
 
         return null;
@@ -160,16 +185,13 @@ public class CustomConnection {
 
     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
         try (Statement st = connection.createStatement()) {
-            String[] columns = data.get(0).keySet().toArray(new String[0]);
+
             StringBuilder sb = new StringBuilder();
             sb.append("insert into ");
-            sb.append(properties.getProperty("table("));
-            for (String col : columns) {
-                sb.append(col);
-                sb.append(",");
-            }
-            sb.deleteCharAt(sb.length());
-            sb.append(" values(");
+            sb.append(properties.getProperty("table"));
+            sb.append("(");
+            sb.append(properties.getProperty("columns"));
+            sb.append(") values(");
             for (HashMap<String, String> m : data) {
                 for (String col : columns) {
                     sb.append(m.get(col));
@@ -180,6 +202,7 @@ public class CustomConnection {
             }
             sb.delete(sb.length() - 1, sb.length());
 
+            System.out.println(sb.toString());
             return st.executeLargeUpdate(st.toString());
         }
     }
@@ -203,14 +226,14 @@ public class CustomConnection {
             int responseCode = connection.getResponseCode();
             return (200 <= responseCode && responseCode <= 299);
         } catch (Exception e) {
-            System.err.println("Error al hacer ping a la URL: " + e.getMessage());
+            logger.error("Error al hacer ping a la URL " + url + ": " + e.getMessage());
             return false;
         }
     }
 
     public void setAutoCommit(boolean b) throws SQLException {
         switch (this.ddbbType) {
-            case "mysql":
+            case "mariadb":
             case "postgresql":
                 this.connection.setAutoCommit(b);
                 break;
@@ -222,7 +245,7 @@ public class CustomConnection {
 
     public void commit() throws SQLException {
         switch (this.ddbbType) {
-            case "mysql":
+            case "mariadb":
             case "postgresql":
                 this.connection.commit();
                 break;
@@ -233,16 +256,12 @@ public class CustomConnection {
 
     public void rollback() throws SQLException {
         switch (this.ddbbType) {
-            case "mysql":
+            case "mariadb":
             case "postgresql":
                 this.connection.rollback();
                 break;
             default:
                 break;
         }
-    }
-
-    public void clearData(){
-        this.data = null;
     }
 }

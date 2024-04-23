@@ -1,7 +1,7 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.ArrayList;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,12 +18,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.demo.config.ConfigManager;
 import com.example.demo.logs.CustomLogManager;
 import com.example.demo.models.PoolConfig;
 import com.example.demo.services.CustomPool;
 import com.example.demo.services.MainService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/")
@@ -34,8 +32,10 @@ public class HomeController {
   @GetMapping("/")
   public String index(Model model) {
 
-    try {
+    if (MainService.poolSize() > 0)
       model.addAttribute("connexions", MainService.getPools());
+
+    try {
       model.addAttribute("logs", CustomLogManager.returnReverseLogHTML());
       model.addAttribute("last_log", CustomLogManager.getLastLog());
     } catch (Exception e) {
@@ -50,45 +50,48 @@ public class HomeController {
 
     ModelAndView modelAndView = new ModelAndView("config");
 
-    if (id >= 0) {
+    if (id >= 0 && id < MainService.poolSize()) {
       modelAndView.addObject("config", MainService.getPool(id).getDatabaseConfig());
-
     }
 
     return modelAndView;
   }
 
-  @PostMapping("/canviaConfiguracio")
-  public RedirectView canviaConfiguracio(@ModelAttribute PoolConfig databaseConfig,
-      RedirectAttributes redirectAttributes) {
-    ObjectMapper oMapper = new ObjectMapper();
-
-    if (databaseConfig.getPeriodically_execution() == null) {
-      databaseConfig.setPeriodically_execution("no");
-    } else {
-      databaseConfig.setPeriodically_execution("yes");
-    }
-
-    if (databaseConfig.getSend_mail() == null) {
-      databaseConfig.setSend_mail("no");
-    } else {
-      databaseConfig.setSend_mail("yes");
-    }
-
-    Map<String, String> updates = oMapper.convertValue(databaseConfig, Map.class);
-    ConfigManager.updateProperties(updates);
-
-    Map<String, String> currentConfig = ConfigManager.getAllProperties();
-    redirectAttributes.addFlashAttribute("config", currentConfig);
-
-    RedirectView rv = new RedirectView();
-    rv.setContextRelative(true);
-    rv.setUrl("/config?okey=true");
-
-    logger.info("Configuració canviada");
-
-    return rv;
-  }
+  /*
+   * @PostMapping("/canviaConfiguracio")
+   * public RedirectView canviaConfiguracio(@ModelAttribute PoolConfig
+   * databaseConfig,
+   * RedirectAttributes redirectAttributes) {
+   * ObjectMapper oMapper = new ObjectMapper();
+   * 
+   * if (databaseConfig.getPeriodically_execution() == null) {
+   * databaseConfig.setPeriodically_execution("no");
+   * } else {
+   * databaseConfig.setPeriodically_execution("yes");
+   * }
+   * 
+   * if (databaseConfig.getSend_mail() == null) {
+   * databaseConfig.setSend_mail("no");
+   * } else {
+   * databaseConfig.setSend_mail("yes");
+   * }
+   * 
+   * Map<String, String> updates = oMapper.convertValue(databaseConfig,
+   * Map.class);
+   * ConfigManager.updateProperties(updates);
+   * 
+   * Map<String, String> currentConfig = ConfigManager.getAllProperties();
+   * redirectAttributes.addFlashAttribute("config", currentConfig);
+   * 
+   * RedirectView rv = new RedirectView();
+   * rv.setContextRelative(true);
+   * rv.setUrl("/config?okey=true");
+   * 
+   * logger.info("Configuració canviada");
+   * 
+   * return rv;
+   * }
+   */
 
   @PostMapping("/configuraPool/{id}")
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
@@ -119,6 +122,7 @@ public class HomeController {
     return rv;
   }
 
+  @ResponseBody
   @GetMapping(value = "run/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public String run(@PathVariable(value = "id") int id) {
     CustomPool pool = MainService.getPool(id);
@@ -129,7 +133,7 @@ public class HomeController {
   @GetMapping(value = "getLastLogs/{data}")
   public String getLastLogs(@PathVariable(value = "data") String data) {
     try {
-      return "{ 'log': + '" + CustomLogManager.returnLogHtmlFromTime(data) + "', 'last_log': '"
+      return "{ 'log': '" + CustomLogManager.returnLogHtmlFromTime(data) + "', 'last_log': '"
           + CustomLogManager.getLastLog() + "' }";
     } catch (IOException e) {
       logger.warn("No s'ha pogut llegir l'arxiu de log, " + e.getStackTrace());
