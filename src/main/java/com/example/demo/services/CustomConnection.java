@@ -130,14 +130,19 @@ public class CustomConnection {
 
     private ArrayList<HashMap<String, String>> getAllDataSql() throws SQLException {
         try (Statement st = connection.createStatement()) {
-            logger.info("Informació Extreta de " + properties.get("name"));
+            logger.info("Informació extreta de " + properties.get("name"));
             return rsToList(st.executeQuery("select * from " + properties.getProperty("table")));
         }
     }
 
     public boolean dropData() throws SQLException {
         try (Statement st = connection.createStatement()) {
-            return st.execute("delete * from " + properties.getProperty("table"));
+            boolean result = st.execute("delete * from " + properties.getProperty("table"));
+            logger.info("Dropped data from " + properties.getProperty("url") + ": " + result);
+            return result;
+        }catch(SQLException e){
+            logger.error("Error deleting data from " + properties.getProperty("url") + ": " + e.getMessage());
+            throw e;
         }
     }
 
