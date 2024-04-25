@@ -13,15 +13,15 @@ public class MailConfig {
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.example.com"); // Configura el servidor SMTP adecuado
-        mailSender.setPort(587); // Configura el puerto SMTP adecuado
-        mailSender.setUsername("your-email@example.com"); // Configura tu dirección de correo electrónico
-        mailSender.setPassword("your-email-password"); // Configura la contraseña de tu correo electrónico
+        mailSender.setHost(ConfigManager.getString("mail_host")); // Configura el servidor SMTP adecuado
+        mailSender.setPort(Integer.parseInt(ConfigManager.getString("mail_port"))); // Configura el puerto SMTP adecuado
+        mailSender.setUsername(ConfigManager.getString("mail_user")); // Configura tu dirección de correo electrónico
+        mailSender.setPassword(ConfigManager.getString("mail_password")); // Configura la contraseña de tu correo electrónico
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.transport.protocol", ConfigManager.getString("mail_protocol"));
+        props.put("mail.smtp.auth", ConfigManager.getString("mail_auth") == "yes" ? "true" : "false");
+        props.put("mail.smtp.starttls.enable", ConfigManager.getString("mail_tls") == "yes" ? "true" : "false");
         props.put("mail.debug", "true");
 
         return mailSender;

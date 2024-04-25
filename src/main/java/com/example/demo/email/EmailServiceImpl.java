@@ -11,6 +11,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.config.ConfigManager;
 import com.example.demo.models.EmailDetails;
 
 import jakarta.mail.MessagingException;
@@ -38,10 +40,10 @@ public class EmailServiceImpl implements EmailService {
 				= new SimpleMailMessage();
 
 			// Setting up necessary details
-			mailMessage.setFrom(sender);
-			mailMessage.setTo(details.getRecipient());
+			mailMessage.setFrom(ConfigManager.getString("mail_user"));
+			mailMessage.setTo(ConfigManager.getString("mail_target"));
 			mailMessage.setText(details.getMsgBody());
-			mailMessage.setSubject(details.getSubject());
+			mailMessage.setSubject(ConfigManager.getString("mail_subject"));
 
 			// Sending the mail
 			javaMailSender.send(mailMessage);
@@ -72,11 +74,10 @@ public class EmailServiceImpl implements EmailService {
 			// be send
 			mimeMessageHelper
 				= new MimeMessageHelper(mimeMessage, true);
-			mimeMessageHelper.setFrom(sender);
-			mimeMessageHelper.setTo(details.getRecipient());
+			mimeMessageHelper.setFrom(ConfigManager.getString("mail_user"));
+			mimeMessageHelper.setTo(ConfigManager.getString("mail_target"));
 			mimeMessageHelper.setText(details.getMsgBody());
-			mimeMessageHelper.setSubject(
-				details.getSubject());
+			mimeMessageHelper.setSubject(ConfigManager.getString("mail_subject"));
 
 			// Adding the attachment
 			FileSystemResource file

@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.example.demo.config.ConfigManager;
+
 public class CustomLogManager {
 
-    private static final String logPath = "src\\main\\java\\com\\example\\demo\\logs\\app.log";
+    private static final String logPath = ConfigManager.getString("logs_path");
 
     public static String returnReverseLogHTML() throws IOException {
         StringBuilder sb = new StringBuilder();

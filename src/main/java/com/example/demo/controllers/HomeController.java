@@ -1,7 +1,7 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,10 +18,13 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.demo.config.ConfigManager;
 import com.example.demo.logs.CustomLogManager;
+import com.example.demo.models.GeneralConfig;
 import com.example.demo.models.PoolConfig;
 import com.example.demo.services.CustomPool;
 import com.example.demo.services.MainService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/")
@@ -57,41 +60,35 @@ public class HomeController {
     return modelAndView;
   }
 
-  /*
-   * @PostMapping("/canviaConfiguracio")
-   * public RedirectView canviaConfiguracio(@ModelAttribute PoolConfig
-   * databaseConfig,
-   * RedirectAttributes redirectAttributes) {
-   * ObjectMapper oMapper = new ObjectMapper();
-   * 
-   * if (databaseConfig.getPeriodically_execution() == null) {
-   * databaseConfig.setPeriodically_execution("no");
-   * } else {
-   * databaseConfig.setPeriodically_execution("yes");
-   * }
-   * 
-   * if (databaseConfig.getSend_mail() == null) {
-   * databaseConfig.setSend_mail("no");
-   * } else {
-   * databaseConfig.setSend_mail("yes");
-   * }
-   * 
-   * Map<String, String> updates = oMapper.convertValue(databaseConfig,
-   * Map.class);
-   * ConfigManager.updateProperties(updates);
-   * 
-   * Map<String, String> currentConfig = ConfigManager.getAllProperties();
-   * redirectAttributes.addFlashAttribute("config", currentConfig);
-   * 
-   * RedirectView rv = new RedirectView();
-   * rv.setContextRelative(true);
-   * rv.setUrl("/config?okey=true");
-   * 
-   * logger.info("Configuració canviada");
-   * 
-   * return rv;
-   * }
-   */
+  @SuppressWarnings("unchecked")
+  @PostMapping("/configuracioGeneral")
+  public RedirectView canviaConfiguracio(@ModelAttribute GeneralConfig generalConfig,
+      RedirectAttributes redirectAttributes) {
+    ObjectMapper oMapper = new ObjectMapper();
+    
+
+    Map<String, String> updates = oMapper.convertValue(generalConfig,
+        Map.class);
+    ConfigManager.updateProperties(updates);
+
+    Map<String, String> currentConfig = ConfigManager.getAllProperties();
+    redirectAttributes.addFlashAttribute("config", currentConfig);
+
+    RedirectView rv = new RedirectView();
+    rv.setContextRelative(true);
+    rv.setUrl("/config?okey=true");
+
+    logger.info("Configuració general canviada");
+
+    return rv;
+  }
+
+  @GetMapping("/configuracioGeneral")
+  public ModelAndView configuracioGeneral(){
+    ModelAndView modelAndView = new ModelAndView("generalConfig");
+    modelAndView.addObject("config", ConfigManager.getAllProperties());
+    return modelAndView;
+  }
 
   @PostMapping("/configuraPool/{id}")
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
