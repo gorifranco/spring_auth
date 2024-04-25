@@ -17,6 +17,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.demo.config.ConfigManager;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -54,8 +55,11 @@ public class CustomConnection {
         switch (ddbbType) {
             case "mariadb": {
                 url = "jdbc:mariadb://" + properties.getProperty("url") + ":" +
-                        properties.getProperty("port") + "/" + properties.getProperty("schema") +
+                        properties.getProperty("port")
+                        + (properties.getProperty("schema") != "" ? "/" + properties.getProperty("schema") : "") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
+
+                logger.info("Intentant connectar a " + url);
                 this.connection = DriverManager.getConnection(url);
             }
                 break;
@@ -140,7 +144,7 @@ public class CustomConnection {
             boolean result = st.execute("delete * from " + properties.getProperty("table"));
             logger.info("Dropped data from " + properties.getProperty("url") + ": " + result);
             return result;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             logger.error("Error deleting data from " + properties.getProperty("url") + ": " + e.getMessage());
             throw e;
         }
@@ -172,7 +176,7 @@ public class CustomConnection {
             ArrayList<HashMap<String, String>> data = mapper.readValue(new File(jsonUrl),
                     new TypeReference<ArrayList<HashMap<String, String>>>() {
                     });
-            logger.info("Extracted data from json " + properties.getProperty("url") + ": " + data.toString());
+            logger.info("Extracted data from json " + properties.getProperty("url"));
             return data;
         } catch (IOException e) {
             logger.error("Error extracting data from JSON (CustomConnection ln 161): " + e.getMessage());
@@ -190,7 +194,8 @@ public class CustomConnection {
 
     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
         try (Statement st = connection.createStatement()) {
-
+            logger.info("Trying to insert data in sql " + properties.getProperty("url"));
+            logger.info(data.get(0).toString());
             StringBuilder sb = new StringBuilder();
             sb.append("insert into ");
             sb.append(properties.getProperty("table"));
@@ -198,17 +203,25 @@ public class CustomConnection {
             sb.append(properties.getProperty("columns"));
             sb.append(") values(");
             for (HashMap<String, String> m : data) {
+                sb.append("(");
                 for (String col : columns) {
-                    sb.append(m.get(col));
-                    sb.append(",");
+                    String value = m.get(col).replace("'", "\\'"); // Escapar las comillas simples
+                    sb.append("'");
+                    sb.append(value);
+                    sb.append("',");
                 }
-                sb.deleteCharAt(sb.length());
-                sb.append("),(");
+                sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
+                sb.append("),");
             }
-            sb.delete(sb.length() - 1, sb.length());
+            sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
 
-            System.out.println(sb.toString());
-            return st.executeLargeUpdate(st.toString());
+            logger.info("Sentència SQL: " + sb.toString());
+            long executed = st.executeLargeUpdate(st.toString());
+            logger.info("Inserts executats amb èxit: " + executed);
+            return executed;
+        }catch(SQLException e){
+            logger.error("error creant inserts: " + e.getMessage());
+            throw e;
         }
     }
 

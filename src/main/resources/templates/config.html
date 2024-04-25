@@ -26,7 +26,8 @@
                 </div>
             </div>
         </nav>
-        <form method="post" id="configForm" th:action="${config != null ? '/canviaConfiguracio' : '/new'}">
+        <form method="post" id="configForm" th:action="${config != null ? '/configuraPool/' + id : '/new'}">
+
             <div class="container mt-5">
                 <h1 class="title text-center"
                     th:text="${config != null ? 'Editar connexió ' + config.name : 'Nova connexió'}"></h1>

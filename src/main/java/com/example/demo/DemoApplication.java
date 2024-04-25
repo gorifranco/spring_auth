@@ -1,5 +1,10 @@
 package com.example.demo;
 
+import java.net.NetworkInterface;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

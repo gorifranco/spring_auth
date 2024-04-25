@@ -1,6 +1,9 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
@@ -52,6 +55,7 @@ public class HomeController {
   public ModelAndView config(@PathVariable(value = "id") int id) {
 
     ModelAndView modelAndView = new ModelAndView("config");
+    modelAndView.addObject("id", id);
 
     if (id >= 0 && id < MainService.poolSize()) {
       modelAndView.addObject("config", MainService.getPool(id).getDatabaseConfig());
@@ -93,17 +97,18 @@ public class HomeController {
   @PostMapping("/configuraPool/{id}")
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
+      System.out.println(databaseConfig.getPeriodically_execution());
 
-    if (databaseConfig.getPeriodically_execution() == null) {
-      databaseConfig.setPeriodically_execution("no");
-    } else {
+    if (databaseConfig.getPeriodically_execution() == "on") {
       databaseConfig.setPeriodically_execution("yes");
+    } else {
+      databaseConfig.setPeriodically_execution("no");
     }
 
-    if (databaseConfig.getSend_mail() == null) {
-      databaseConfig.setSend_mail("no");
-    } else {
+    if (databaseConfig.getSend_mail() == "on") {
       databaseConfig.setSend_mail("yes");
+    } else {
+      databaseConfig.setSend_mail("no");
     }
 
     MainService.updatePoolConfig(id, databaseConfig);
@@ -112,7 +117,7 @@ public class HomeController {
 
     RedirectView rv = new RedirectView();
     rv.setContextRelative(true);
-    rv.setUrl("/config?okey=true");
+    rv.setUrl("/?okey=true");
 
     logger.info("Configuració canviada");
 
@@ -145,5 +150,19 @@ public class HomeController {
     rv.setUrl("/");
     return rv;
 
+  }
+
+  @GetMapping("meam")
+  public void emam(){
+    System.out.println("=====================");
+		try {
+      String url = "jdbc:mariadb://192.168.56.2:3306?user=deb3&password=deb3";
+			Connection c1 = DriverManager.getConnection(url);
+			System.out.println(c1.isValid(2000));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+		System.out.println("===================");
   }
 }
