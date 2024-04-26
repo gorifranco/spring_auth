@@ -69,7 +69,6 @@ public class HomeController {
   public RedirectView canviaConfiguracio(@ModelAttribute GeneralConfig generalConfig,
       RedirectAttributes redirectAttributes) {
     ObjectMapper oMapper = new ObjectMapper();
-    
 
     Map<String, String> updates = oMapper.convertValue(generalConfig,
         Map.class);
@@ -88,7 +87,7 @@ public class HomeController {
   }
 
   @GetMapping("/configuracioGeneral")
-  public ModelAndView configuracioGeneral(){
+  public ModelAndView configuracioGeneral() {
     ModelAndView modelAndView = new ModelAndView("generalConfig");
     modelAndView.addObject("config", ConfigManager.getAllProperties());
     return modelAndView;
@@ -97,7 +96,7 @@ public class HomeController {
   @PostMapping("/configuraPool/{id}")
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
-      System.out.println(databaseConfig.getPeriodically_execution());
+    System.out.println(databaseConfig.getPeriodically_execution());
 
     if (databaseConfig.getPeriodically_execution() == "on") {
       databaseConfig.setPeriodically_execution("yes");
@@ -152,17 +151,11 @@ public class HomeController {
 
   }
 
-  @GetMapping("meam")
-  public void emam(){
-    System.out.println("=====================");
-		try {
-      String url = "jdbc:mariadb://192.168.56.2:3306?user=deb3&password=deb3";
-			Connection c1 = DriverManager.getConnection(url);
-			System.out.println(c1.isValid(2000));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getMessage());
-		}
-		System.out.println("===================");
+  @GetMapping("eliminarPool/{id}")
+  public RedirectView eliminarPool(@PathVariable(value = "id") int id) {
+    boolean  resultat = MainService.deletePool(id);
+    RedirectView rv = new RedirectView();
+    rv.setUrl("/?borrat=" + resultat);
+    return rv;
   }
 }

@@ -1,6 +1,22 @@
 window.onload = () => {
     const loader = document.getElementById("loader");
 
+    const queryString = window.location.search;
+
+    const searchParams = new URLSearchParams(queryString);
+
+    const borrarParametro = searchParams.get('borrat');
+    if (borrarParametro) {
+        if (borrarParametro == true) {
+            alert("Connexió eliminada amb èxit")
+            window.location.reload()
+        } else {
+            alert("No s'ha pogut eliminar la connexió")
+        }
+    }
+
+
+
     const botons = document.getElementsByClassName("playButton");
     for (const b of botons) {
         b.onclick = async () => {
@@ -9,6 +25,15 @@ window.onload = () => {
             await getNewLogs();
         };
     }
+
+    const ancoresEliminar = document.getElementsByClassName("eliminar");
+    Array.from(ancoresEliminar).forEach(element => {
+        element.onclick = () => {
+            if (confirm("Segur que vols eliminar la connexió?") == true) {
+                fetch("eliminarPool/" + element.id)
+            }
+        }
+    });
 };
 
 async function getNewLogs() {
@@ -32,6 +57,6 @@ async function getNewLogs() {
     }
 
     lastLogElement.textContent = logs; // Actualizar el último registro
-    
+
 }
 

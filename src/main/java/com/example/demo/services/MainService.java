@@ -31,19 +31,19 @@ public class MainService {
 
     private static void loadData() {
         File tmp = new File(poolsDataFile);
-        if(!tmp.exists() || tmp.length() == 0) return;
+        if (!tmp.exists() || tmp.length() == 0)
+            return;
 
-        try(
-            FileInputStream fi = new FileInputStream(new File(poolsDataFile));
-			ObjectInputStream oi = new ObjectInputStream(fi);
-        ){
-            while(true){
+        try (
+                FileInputStream fi = new FileInputStream(new File(poolsDataFile));
+                ObjectInputStream oi = new ObjectInputStream(fi);) {
+            while (true) {
                 pools.add(new CustomPool((PoolConfig) oi.readObject()));
             }
 
         } catch (IOException e) {
             logger.error("IOException carregant connexions: " + e.getMessage());
-        } catch(ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             logger.error("ClassNotFound carregant connexions: " + e.getMessage());
         }
     }
@@ -74,8 +74,18 @@ public class MainService {
         saveData();
     }
 
-    public static int poolSize(){
+    public static int poolSize() {
         return pools.size();
     }
 
+    public static boolean deletePool(int id) {
+        if (id >= poolSize()) {
+            logger.error("Intentent borra una connexió inexistent");
+            return false;
+        }
+        pools.remove(id);
+        saveData();
+        logger.info("Connexió eliminada amb èxit");
+        return true;
+    }
 }

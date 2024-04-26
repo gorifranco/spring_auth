@@ -17,7 +17,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.demo.config.ConfigManager;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -141,9 +140,10 @@ public class CustomConnection {
 
     public boolean dropData() throws SQLException {
         try (Statement st = connection.createStatement()) {
-            boolean result = st.execute("delete * from " + properties.getProperty("table"));
-            logger.info("Dropped data from " + properties.getProperty("url") + ": " + result);
-            return result;
+            String sentence = "delete from " + properties.getProperty("table") + ";";
+            int result = st.executeUpdate(sentence);
+            logger.info("Dropped data from " + properties.getProperty("url") + ": " + result + " tuples");
+            return true;
         } catch (SQLException e) {
             logger.error("Error deleting data from " + properties.getProperty("url") + ": " + e.getMessage());
             throw e;
@@ -192,36 +192,75 @@ public class CustomConnection {
         return data.size();
     }
 
+/*     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
+        long contador = 0;
+        try (Statement st = connection.createStatement()) {
+            logger.info("Trying to insert data in sql " + properties.getProperty("url"));
+            StringBuilder sb = new StringBuilder();
+            for (HashMap<String, String> m : data) {
+                sb.append("insert into ");
+                sb.append(properties.getProperty("table"));
+                sb.append("(");
+                sb.append(properties.getProperty("columns"));
+                sb.append(") value(");
+                for (String col : columns) {
+                    sb.append("\"");
+                    sb.append(m.get(col));
+                    sb.append("\",");
+                }
+                sb.append(")");
+                sb.deleteCharAt(sb.length() - 2); // Eliminar la coma final
+                sb.append(";");
+                System.out.println(sb.toString());
+                st.executeUpdate(sb.toString());
+            }
+            return contador;
+        }catch(SQLException e){
+            logger.error("error creant inserts: " + e.getMessage());
+            throw e;
+        }catch(Exception e){
+            logger.error("Error del bucle: " + e.getMessage());
+            return 1;
+        }
+    } */
+
     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
         try (Statement st = connection.createStatement()) {
             logger.info("Trying to insert data in sql " + properties.getProperty("url"));
-            logger.info(data.get(0).toString());
+            logger.info("Tuples: " + data.size());
             StringBuilder sb = new StringBuilder();
             sb.append("insert into ");
             sb.append(properties.getProperty("table"));
             sb.append("(");
             sb.append(properties.getProperty("columns"));
-            sb.append(") values(");
+            sb.append(") values");
             for (HashMap<String, String> m : data) {
                 sb.append("(");
                 for (String col : columns) {
-                    String value = m.get(col).replace("'", "\\'"); // Escapar las comillas simples
-                    sb.append("'");
-                    sb.append(value);
-                    sb.append("',");
+                    sb.append("\"");
+                    sb.append(m.get(col));
+                    sb.append("\",");
+                    if(m.get(col) == null){
+                        sb.deleteCharAt(sb.length()-7);
+                        sb.deleteCharAt(sb.length()-1);
+                    }
                 }
                 sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
-                sb.append("),");
+                sb.append("),\n");
             }
-            sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
-
-            logger.info("Sentència SQL: " + sb.toString());
-            long executed = st.executeLargeUpdate(st.toString());
+            sb.delete(sb.length()-2, sb.length()-1);
+            sb.append(";");
+            long executed = st.executeLargeUpdate(sb.toString());
             logger.info("Inserts executats amb èxit: " + executed);
             return executed;
         }catch(SQLException e){
+            rollback();
             logger.error("error creant inserts: " + e.getMessage());
             throw e;
+        }catch(Exception e){
+            rollback();
+            logger.error("Error del bucle: " + e.getMessage());
+            return 1;
         }
     }
 
@@ -232,7 +271,7 @@ public class CustomConnection {
         } catch (Exception e) {
             return false;
         }
-    }
+    } 
 
     private static boolean pingURL(String url, int timeout) {
         try {
@@ -277,6 +316,7 @@ public class CustomConnection {
             case "mariadb":
             case "postgresql":
                 this.connection.rollback();
+                logger.info("Rollback");
                 break;
             default:
                 break;

@@ -145,6 +145,7 @@ public class CustomPool {
             c_out.setAutoCommit(false);
 
             ArrayList<HashMap<String, String>> data = c_in.extractData();
+            c_out.dropData();
             c_out.insertData(data);
             c_out.commit();
         }
