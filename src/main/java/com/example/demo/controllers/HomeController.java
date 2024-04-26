@@ -116,6 +116,7 @@ public class HomeController {
     return pool.run();
   }
 
+
   @ResponseBody
   @GetMapping(value = "getLastLogs/{data}")
   public String getLastLogs(@PathVariable(value = "data") String data) {
