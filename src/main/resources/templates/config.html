@@ -201,9 +201,9 @@
                         <div class="col-md-3">
                             <label for="periodically_execution">Actualitzar periòdicament?</label>
                             <input type="checkbox" id="periodically_execution" name="periodically_execution"
-                                th:checked="${config != null && config.periodically_execution == 'yes'}">
+                                th:checked="${config != null && config.periodically_execution == true}">
                             <span class="mx-1"
-                                th:text="${config == null || config.periodically_execution == 'no' ? 'NO' : 'SI'}"></span>
+                                th:text="${config == null || config.periodically_execution == false ? 'NO' : 'SI'}"></span>
                         </div>
 
                         <!-- Segundo contenedor: Selección de intervalo y cantidad -->
@@ -211,7 +211,7 @@
                             <div class="col">
                                 <label for="time_unit">Mesura temporal</label>
                                 <select id="time_unit" class="form-select" name="time_unit"
-                                    th:disabled="${config == null || config.periodically_execution == 'no'}">
+                                    th:disabled="${config == null || config.periodically_execution == false}">
                                     <option value="day" th:selected="${config != null && config.time_unit == 'day'}">Dia
                                     </option>
                                     <option value="month"
@@ -223,8 +223,8 @@
                             <div class="col">
                                 <label for="time_interval">Quantitat</label>
                                 <input type="number" id="time_interval" name="time_interval" min="1"
-                                    class="form-control" th:value="${config != null ? config.time_interval : ''}"
-                                    th:disabled="${config == null || config.periodically_execution == 'no'}">
+                                    class="form-control" th:value="${config != null ? config.time_interval : '1'}"
+                                    th:disabled="${config == null || config.periodically_execution == false}">
                             </div>
                         </div>
                     </div>
@@ -233,9 +233,9 @@
                         <div class="col-md-3">
                             <label for="send_mail">Enviar info per correu</label>
                             <input type="checkbox" id="send_mail" name="send_mail"
-                                th:checked="${config != null && config.send_mail == 'yes'}">
+                                th:checked="${config != null && config.send_mail == true}">
                             <span class="mx-1"
-                                th:text="${config == null || config.send_mail == 'no' ? 'NO' : 'SI'}"></span>
+                                th:text="${config == null || config.send_mail == false ? 'NO' : 'SI'}"></span>
                         </div>
                     </div>
                 </div>

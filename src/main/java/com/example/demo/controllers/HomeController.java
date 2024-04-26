@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
@@ -96,19 +93,8 @@ public class HomeController {
   @PostMapping("/configuraPool/{id}")
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
-    System.out.println(databaseConfig.getPeriodically_execution());
 
-    if (databaseConfig.getPeriodically_execution() == "on") {
-      databaseConfig.setPeriodically_execution("yes");
-    } else {
-      databaseConfig.setPeriodically_execution("no");
-    }
-
-    if (databaseConfig.getSend_mail() == "on") {
-      databaseConfig.setSend_mail("yes");
-    } else {
-      databaseConfig.setSend_mail("no");
-    }
+    System.out.println(databaseConfig.toString());
 
     MainService.updatePoolConfig(id, databaseConfig);
 
@@ -153,7 +139,7 @@ public class HomeController {
 
   @GetMapping("eliminarPool/{id}")
   public RedirectView eliminarPool(@PathVariable(value = "id") int id) {
-    boolean  resultat = MainService.deletePool(id);
+    boolean resultat = MainService.deletePool(id);
     RedirectView rv = new RedirectView();
     rv.setUrl("/?borrat=" + resultat);
     return rv;

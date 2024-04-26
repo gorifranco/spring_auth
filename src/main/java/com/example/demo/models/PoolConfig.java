@@ -22,11 +22,11 @@ public class PoolConfig implements Serializable{
     private String ddbb_out_table;
     private String ddbb_out_columns;
 
-    private String periodically_execution;
+    private boolean periodically_execution;
     private String time_interval;
     private String time_unit;
 
-    private String send_mail;
+    private boolean send_mail;
     private String name;
     private String description;
     private String nextExecution;
@@ -46,10 +46,10 @@ public class PoolConfig implements Serializable{
         this.ddbb_out_port = "";
         this.ddbb_out_schema = "";
         this.ddbb_out_table = "";
-        this.periodically_execution = "";
+        this.periodically_execution = false;
         this.time_interval = "";
         this.time_unit = "";
-        this.send_mail = "";
+        this.send_mail = false;
         this.name = "";
         this.description = "";
         this.ddbb_in_columns = "";
@@ -61,8 +61,8 @@ public class PoolConfig implements Serializable{
     public PoolConfig(String ddbb_in_url, String ddbb_in_type, String ddbb_in_user, String ddbb_in_password,
             String ddbb_in_port, String ddbb_in_schema, String ddbb_in_table, String ddbb_out_url, String ddbb_out_type,
             String ddbb_out_user, String ddbb_out_password, String ddbb_out_port, String ddbb_out_schema,
-            String ddbb_out_table, String periodically_execution, String time_interval, String time_unit,
-            String send_mail, String name, String description) {
+            String ddbb_out_table, boolean periodically_execution, String time_interval, String time_unit,
+            boolean send_mail, String name, String description) {
         this.ddbb_in_url = ddbb_in_url;
         this.ddbb_in_type = ddbb_in_type;
         this.ddbb_in_user = ddbb_in_user;
@@ -135,11 +135,11 @@ public class PoolConfig implements Serializable{
         this.ddbb_out_table = ddbb_out_table;
     }
 
-    public String getSend_mail() {
+    public boolean getSend_mail() {
         return send_mail;
     }
 
-    public void setSend_mail(String send_mail) {
+    public void setSend_mail(boolean send_mail) {
         this.send_mail = send_mail;
     }
 
@@ -239,11 +239,11 @@ public class PoolConfig implements Serializable{
         this.ddbb_out_schema = ddbb_out_schema;
     }
 
-    public String getPeriodically_execution() {
+    public boolean getPeriodically_execution() {
         return periodically_execution;
     }
 
-    public void setPeriodically_execution(String periodically_execution) {
+    public void setPeriodically_execution(boolean periodically_execution) {
         this.periodically_execution = periodically_execution;
     }
 

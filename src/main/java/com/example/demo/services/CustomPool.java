@@ -12,7 +12,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.example.demo.config.ConfigManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.example.demo.models.PoolConfig;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -24,6 +26,7 @@ public class CustomPool {
     private CustomConnection c_in;
     private CustomConnection c_out;
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomPool.class);
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     private Runnable task;
 
@@ -59,8 +62,9 @@ public class CustomPool {
     }
 
     public String run() {
+        System.out.println("CustomPool-Periodicaly execution:" + dbconf.getPeriodically_execution() + ".");
         try {
-            if (dbconf.getPeriodically_execution() == "yes") {
+            if (dbconf.getPeriodically_execution()) {
                 runPeriodically();
                 return "{status: \"success\"," +
                         " next_execution: \"" + nextExecution() + "\"}";
@@ -75,14 +79,15 @@ public class CustomPool {
     }
 
     private void createRunnable() {
-        task = new Runnable() {
+        try{
+                    task = new Runnable() {
             @Override
             public void run() {
                 long delay = 0;
                 try {
                     ZonedDateTime now = ZonedDateTime.now();
-                    String time_unit = ConfigManager.getString("time_unit");
-                    long time_interval = ConfigManager.getLong("time_interval");
+                    String time_unit = dbconf.getTime_unit();
+                    long time_interval = Long.parseLong(dbconf.getTime_interval());
                     switch (time_unit) {
                         case "day":
                             delay = now.until(now.plusDays(time_interval), ChronoUnit.MILLIS);
@@ -94,17 +99,21 @@ public class CustomPool {
                     updateDB();
                     dbconf.setNextExecution(nextExecution());
                 } catch (Exception e) {
-                    System.out.println(e);
+                    logger.error("Error creating runnable: " + e.getMessage());
                 } finally {
                     executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                 }
             }
         };
+        }catch(Exception e){
+            logger.error("error creating runnable: " + e.getMessage());
+        }
+
     }
 
     private String nextExecution() {
-        String timeUnit = ConfigManager.getString("time_unit");
-        int timeInterval = Integer.parseInt(ConfigManager.getString("time_interval"));
+        String timeUnit = dbconf.getTime_unit();
+        int timeInterval = Integer.parseInt(dbconf.getTime_interval());
 
         LocalDate currentDate = LocalDate.now();
         LocalDate futureDate = currentDate;
@@ -119,24 +128,24 @@ public class CustomPool {
                 futureDate = currentDate.plusYears(timeInterval);
                 break;
         }
-
+        logger.info("Proxima execucio: " + futureDate);
         return futureDate.toString();
 
     }
 
-    public void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
+    private void runOnce() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
         dbconf.setNextExecution("");
         updateDB();
     }
 
-    public void runPeriodically() {
+    private void runPeriodically() {
         createRunnable();
         task.run();
     }
 
     public void stopService() {
         executor.shutdown();
-        ConfigManager.setString("next_execution", "no");
+        dbconf.setPeriodically_execution(false);
     }
 
     private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
@@ -155,7 +164,7 @@ public class CustomPool {
         return this.dbconf;
     }
 
-    public void updateConf(PoolConfig poolConfig){
+    public void updateConf(PoolConfig poolConfig) {
         this.dbconf = poolConfig;
     }
 
