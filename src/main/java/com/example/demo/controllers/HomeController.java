@@ -65,10 +65,13 @@ public class HomeController {
   @PostMapping("/configuracioGeneral")
   public RedirectView canviaConfiguracio(@ModelAttribute GeneralConfig generalConfig,
       RedirectAttributes redirectAttributes) {
+
     ObjectMapper oMapper = new ObjectMapper();
 
     Map<String, String> updates = oMapper.convertValue(generalConfig,
         Map.class);
+    System.out.println(updates.toString());
+
     ConfigManager.updateProperties(updates);
 
     Map<String, String> currentConfig = ConfigManager.getAllProperties();
@@ -76,7 +79,7 @@ public class HomeController {
 
     RedirectView rv = new RedirectView();
     rv.setContextRelative(true);
-    rv.setUrl("/config?okey=true");
+    rv.setUrl("/configuracioGeneral?okey=true");
 
     logger.info("Configuració general canviada");
 
@@ -112,10 +115,22 @@ public class HomeController {
   @ResponseBody
   @GetMapping(value = "run/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public String run(@PathVariable(value = "id") int id) {
+
     CustomPool pool = MainService.getPool(id);
+    if (pool == null) {
+      return "La connexió no existeix.";
+    }
     return pool.run();
   }
 
+  @ResponseBody
+  @GetMapping(value = "stop/{id}")
+  public void stop(@PathVariable(value = "id") int id) {
+
+    CustomPool pool = MainService.getPool(id);
+    if (pool != null)
+      pool.stopService();
+  }
 
   @ResponseBody
   @GetMapping(value = "getLastLogs/{data}")

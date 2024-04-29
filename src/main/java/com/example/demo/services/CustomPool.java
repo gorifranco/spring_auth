@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.example.demo.config.EmailService;
 import com.example.demo.models.PoolConfig;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -79,33 +80,33 @@ public class CustomPool {
     }
 
     private void createRunnable() {
-        try{
-                    task = new Runnable() {
-            @Override
-            public void run() {
-                long delay = 0;
-                try {
-                    ZonedDateTime now = ZonedDateTime.now();
-                    String time_unit = dbconf.getTime_unit();
-                    long time_interval = Long.parseLong(dbconf.getTime_interval());
-                    switch (time_unit) {
-                        case "day":
-                            delay = now.until(now.plusDays(time_interval), ChronoUnit.MILLIS);
-                        case "month":
-                            delay = now.until(now.plusMonths(time_interval), ChronoUnit.MILLIS);
-                        case "year":
-                            delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
+        try {
+            task = new Runnable() {
+                @Override
+                public void run() {
+                    long delay = 0;
+                    try {
+                        ZonedDateTime now = ZonedDateTime.now();
+                        String time_unit = dbconf.getTime_unit();
+                        long time_interval = Long.parseLong(dbconf.getTime_interval());
+                        switch (time_unit) {
+                            case "day":
+                                delay = now.until(now.plusDays(time_interval), ChronoUnit.MILLIS);
+                            case "month":
+                                delay = now.until(now.plusMonths(time_interval), ChronoUnit.MILLIS);
+                            case "year":
+                                delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
+                        }
+                        updateDB();
+                        dbconf.setNextExecution(nextExecution());
+                    } catch (Exception e) {
+                        logger.error("Error creating runnable: " + e.getMessage());
+                    } finally {
+                        executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                     }
-                    updateDB();
-                    dbconf.setNextExecution(nextExecution());
-                } catch (Exception e) {
-                    logger.error("Error creating runnable: " + e.getMessage());
-                } finally {
-                    executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                 }
-            }
-        };
-        }catch(Exception e){
+            };
+        } catch (Exception e) {
             logger.error("error creating runnable: " + e.getMessage());
         }
 
@@ -145,7 +146,9 @@ public class CustomPool {
 
     public void stopService() {
         executor.shutdown();
+        dbconf.setNextExecution("");
         dbconf.setPeriodically_execution(false);
+        logger.info("Servei " + dbconf.getName() + " aturat.");
     }
 
     private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
@@ -155,8 +158,13 @@ public class CustomPool {
 
             ArrayList<HashMap<String, String>> data = c_in.extractData();
             c_out.dropData();
-            c_out.insertData(data);
+            long inserts = c_out.insertData(data);
             c_out.commit();
+
+            if (dbconf.getSend_mail()) {
+                EmailService.sendEmail("Servei executat correctament. Tuples rebudes: " + data.size()
+                        + ". Tuples insertades: " + inserts);
+            }
         }
     }
 

@@ -15,14 +15,14 @@ window.onload = () => {
         }
     }
 
-
-
     const botons = document.getElementsByClassName("playButton");
+    const nextExecutions = document.getElementsByClassName("ne")
+
     for (const b of botons) {
         b.onclick = async () => {
-            console.log("click");
-            await fetch("http://localhost:8080/run/" + b.id);
+            await fetch((nextExecutions[b.id].textContent == "") ? "http://localhost:8080/run/" + b.id : "http://localhost:8080/stop/" + b.id);
             await getNewLogs();
+            window.location.reload()
         };
     }
 

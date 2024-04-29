@@ -5,28 +5,28 @@ public class GeneralConfig {
     private String logs_path;
 
     private String mail_host;
-    private String mails_port;
+    private String mail_port;
     private String mail_user;
     private String mail_password;
     private String mail_protocol;
     private String mail_tls;
     private String mail_auth;
     private String mail_target;
-    private String maiL_subject;
+    private String mail_subject;
 
     
-    public GeneralConfig(String logs_path, String mail_host, String mails_port, String mail_user, String mail_password,
-            String mail_protocol, String mail_tls, String mail_auth, String mail_target, String maiL_subject) {
+    public GeneralConfig(String logs_path, String mail_host, String mail_port, String mail_user, String mail_password,
+            String mail_protocol, String mail_tls, String mail_auth, String mail_target, String mail_subject) {
         this.logs_path = logs_path;
         this.mail_host = mail_host;
-        this.mails_port = mails_port;
+        this.mail_port = mail_port;
         this.mail_user = mail_user;
         this.mail_password = mail_password;
         this.mail_protocol = mail_protocol;
         this.mail_tls = mail_tls;
         this.mail_auth = mail_auth;
         this.mail_target = mail_target;
-        this.maiL_subject = maiL_subject;
+        this.mail_subject = mail_subject;
     }
 
     public GeneralConfig() {
@@ -42,11 +42,11 @@ public class GeneralConfig {
     }
 
     public String getMaiL_subject() {
-        return maiL_subject;
+        return mail_subject;
     }
 
-    public void setMaiL_subject(String maiL_subject) {
-        this.maiL_subject = maiL_subject;
+    public void setMaiL_subject(String mail_subject) {
+        this.mail_subject = mail_subject;
     }
 
     public String getLogs_path() {
@@ -62,10 +62,10 @@ public class GeneralConfig {
         this.mail_host = mail_host;
     }
     public String getMails_port() {
-        return mails_port;
+        return mail_port;
     }
-    public void setMails_port(String mails_port) {
-        this.mails_port = mails_port;
+    public void setMails_port(String mail_port) {
+        this.mail_port = mail_port;
     }
     public String getMail_user() {
         return mail_user;

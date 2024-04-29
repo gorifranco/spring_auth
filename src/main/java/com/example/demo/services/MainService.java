@@ -21,6 +21,11 @@ public class MainService {
     private static ArrayList<CustomPool> pools;
 
     public static CustomPool getPool(int id) {
+
+        if (pools.size() < id) {
+            logger.warn("No existeix la connexió");
+            return null;
+        }
         return pools.get(id);
     }
 
