@@ -58,7 +58,7 @@ public class CustomConnection {
                         + (properties.getProperty("schema") != "" ? "/" + properties.getProperty("schema") : "") +
                         "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
 
-                logger.info("Intentant connectar a " + url);
+                logger.info("Intentant connectar a " + properties.getProperty("url"));
                 this.connection = DriverManager.getConnection(url);
             }
                 break;

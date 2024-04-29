@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import com.example.demo.services.CryptService;
+
 import java.security.MessageDigest;
 import java.util.Base64;
 
@@ -25,21 +28,20 @@ public class EmailService {
         javaMailSenderImpl.setUsername(ConfigManager.getString("mail_user"));
 
         String encryptedPassword = ConfigManager.getString("mail_password");
-        String decryptedPassword = decryptPassword(encryptedPassword);
+        String decryptedPassword = CryptService.decrypt(encryptedPassword);
 
         javaMailSenderImpl.setPassword(decryptedPassword);
 
-        // Configuración adicional, si es necesario
         Properties props = javaMailSenderImpl.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.ssl.enable", "true");
 
-        System.out.println("SMTP Host: " + javaMailSenderImpl.getHost());
-        System.out.println("SMTP Port: " + javaMailSenderImpl.getPort());
-        System.out.println("SMTP Username: " + javaMailSenderImpl.getUsername());
-        System.out.println("Pass: " + javaMailSenderImpl.getPassword());
-        System.out.println("props: " + javaMailSenderImpl.getJavaMailProperties().toString());
+        // System.out.println("SMTP Host: " + javaMailSenderImpl.getHost());
+        // System.out.println("SMTP Port: " + javaMailSenderImpl.getPort());
+        // System.out.println("SMTP Username: " + javaMailSenderImpl.getUsername());
+        // System.out.println("Pass: " + javaMailSenderImpl.getPassword());
+        // System.out.println("props: " + javaMailSenderImpl.getJavaMailProperties().toString());
     }
 
     public static void sendEmail(String body) {
@@ -58,16 +60,4 @@ public class EmailService {
             logger.error("Error enviant el correu electronic: " + e.getMessage());
         }
     }
-    private static String decryptPassword(String encryptedPassword) {
-    try {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] decodedBytes = Base64.getDecoder().decode(encryptedPassword);
-        byte[] hashedBytes = digest.digest(decodedBytes);
-        return Base64.getEncoder().encodeToString(hashedBytes);
-    } catch (NoSuchAlgorithmException e) {
-        // Manejar la excepción de algoritmo no encontrado
-        e.printStackTrace();
-        return null;
-    }
-}
 }

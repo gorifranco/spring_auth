@@ -7,7 +7,6 @@ import java.util.Base64;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +25,7 @@ import com.example.demo.config.ConfigManager;
 import com.example.demo.logs.CustomLogManager;
 import com.example.demo.models.GeneralConfig;
 import com.example.demo.models.PoolConfig;
+import com.example.demo.services.CryptService;
 import com.example.demo.services.CustomPool;
 import com.example.demo.services.MainService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +46,7 @@ public class HomeController {
       model.addAttribute("logs", CustomLogManager.returnReverseLogHTML());
       model.addAttribute("last_log", CustomLogManager.getLastLog());
     } catch (Exception e) {
-      logger.warn("logs", "No s'han pogut carregar els logs de l'aplicació");
+      logger.warn("No s'han pogut carregar els logs de l'aplicació");
       model.addAttribute("logs", "No s'han pogut carregar els logs de l'aplicació");
     }
     return "index";
@@ -72,16 +72,8 @@ public class HomeController {
 
     ObjectMapper oMapper = new ObjectMapper();
 
-    try {
-      MessageDigest digest = MessageDigest.getInstance("SHA-256");
-      byte[] hash = digest.digest(generalConfig.getMail_password().getBytes(StandardCharsets.UTF_8));
+    generalConfig.setMail_password(CryptService.encrypt(generalConfig.getMail_password()));
 
-      String encoded = Base64.getEncoder().encodeToString(hash);
-      generalConfig.setMail_password(encoded);
-    } catch (Exception e) {
-      logger.error("No s'ha pogut encriptar la contrassenya" + e.getMessage());
-    }
-    
     Map<String, String> updates = oMapper.convertValue(generalConfig,
         Map.class);
 
@@ -110,7 +102,11 @@ public class HomeController {
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
 
-    System.out.println(databaseConfig.toString());
+        if(databaseConfig.getDdbb_in_password() != null)
+    databaseConfig.setDdbb_in_password(CryptService.encrypt(databaseConfig.getDdbb_in_password()));
+
+    if(databaseConfig.getDdbb_out_password() != null)
+    databaseConfig.setDdbb_out_password(CryptService.encrypt(databaseConfig.getDdbb_out_password()));
 
     MainService.updatePoolConfig(id, databaseConfig);
 
@@ -159,6 +155,13 @@ public class HomeController {
 
   @PostMapping(value = "new")
   public RedirectView newPool(@ModelAttribute PoolConfig dbconf) {
+
+    if(dbconf.getDdbb_in_password() != null)
+    dbconf.setDdbb_in_password(CryptService.encrypt(dbconf.getDdbb_in_password()));
+
+    if(dbconf.getDdbb_out_password() != null)
+    dbconf.setDdbb_out_password(CryptService.encrypt(dbconf.getDdbb_out_password()));
+
     MainService.createPool(dbconf);
     RedirectView rv = new RedirectView();
     rv.setUrl("/");

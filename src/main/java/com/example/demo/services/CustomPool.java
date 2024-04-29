@@ -20,8 +20,6 @@ import com.example.demo.models.PoolConfig;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 
-import jakarta.mail.MessagingException;
-
 public class CustomPool {
 
     private PoolConfig dbconf;
@@ -42,7 +40,7 @@ public class CustomPool {
         Properties p_in = new Properties();
         p_in.setProperty("url", dbconf.getDdbb_in_url());
         p_in.setProperty("user", dbconf.getDdbb_in_user());
-        p_in.setProperty("password", dbconf.getDdbb_in_password());
+        p_in.setProperty("password", dbconf.getDdbb_in_password() != null ? CryptService.decrypt(dbconf.getDdbb_in_password()) : "");
         p_in.setProperty("port", dbconf.getDdbb_in_port());
         p_in.setProperty("schema", dbconf.getDdbb_in_schema());
         p_in.setProperty("type", dbconf.getDdbb_in_type());
@@ -54,7 +52,7 @@ public class CustomPool {
         Properties p_out = new Properties();
         p_out.setProperty("url", dbconf.getDdbb_out_url());
         p_out.setProperty("user", dbconf.getDdbb_out_user());
-        p_out.setProperty("password", dbconf.getDdbb_out_password());
+        p_out.setProperty("password", dbconf.getDdbb_out_password() != null ? CryptService.decrypt(dbconf.getDdbb_out_password()) : "");
         p_out.setProperty("port", dbconf.getDdbb_out_port());
         p_out.setProperty("schema", dbconf.getDdbb_out_schema());
         p_out.setProperty("type", dbconf.getDdbb_out_type());
@@ -174,6 +172,11 @@ public class CustomPool {
 
     public void updateConf(PoolConfig poolConfig) {
         this.dbconf = poolConfig;
+        reconect();
+    }
+
+    private void reconect(){
+        createConnections();
     }
 
 }
