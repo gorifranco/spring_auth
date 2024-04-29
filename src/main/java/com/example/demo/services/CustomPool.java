@@ -20,6 +20,8 @@ import com.example.demo.models.PoolConfig;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 
+import jakarta.mail.MessagingException;
+
 public class CustomPool {
 
     private PoolConfig dbconf;
@@ -63,7 +65,6 @@ public class CustomPool {
     }
 
     public String run() {
-        System.out.println("CustomPool-Periodicaly execution:" + dbconf.getPeriodically_execution() + ".");
         try {
             if (dbconf.getPeriodically_execution()) {
                 runPeriodically();
@@ -167,7 +168,6 @@ public class CustomPool {
             }
         }
     }
-
     public PoolConfig getDatabaseConfig() {
         return this.dbconf;
     }

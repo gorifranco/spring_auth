@@ -1,9 +1,13 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,9 +72,18 @@ public class HomeController {
 
     ObjectMapper oMapper = new ObjectMapper();
 
+    try {
+      MessageDigest digest = MessageDigest.getInstance("SHA-256");
+      byte[] hash = digest.digest(generalConfig.getMail_password().getBytes(StandardCharsets.UTF_8));
+
+      String encoded = Base64.getEncoder().encodeToString(hash);
+      generalConfig.setMail_password(encoded);
+    } catch (Exception e) {
+      logger.error("No s'ha pogut encriptar la contrassenya" + e.getMessage());
+    }
+    
     Map<String, String> updates = oMapper.convertValue(generalConfig,
         Map.class);
-    System.out.println(updates.toString());
 
     ConfigManager.updateProperties(updates);
 

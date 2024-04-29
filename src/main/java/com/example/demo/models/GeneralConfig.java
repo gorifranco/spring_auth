@@ -41,11 +41,11 @@ public class GeneralConfig {
         this.mail_target = mail_target;
     }
 
-    public String getMaiL_subject() {
+    public String getMail_subject() {
         return mail_subject;
     }
 
-    public void setMaiL_subject(String mail_subject) {
+    public void setMail_subject(String mail_subject) {
         this.mail_subject = mail_subject;
     }
 
@@ -61,10 +61,10 @@ public class GeneralConfig {
     public void setMail_host(String mail_host) {
         this.mail_host = mail_host;
     }
-    public String getMails_port() {
+    public String getMail_port() {
         return mail_port;
     }
-    public void setMails_port(String mail_port) {
+    public void setMail_port(String mail_port) {
         this.mail_port = mail_port;
     }
     public String getMail_user() {
@@ -104,4 +104,11 @@ public class GeneralConfig {
         this.mail_target = mail_target;
     }
 
+    @Override
+    public String toString() {
+        return "GeneralConfig [logs_path=" + logs_path + ", mail_host=" + mail_host + ", mail_port=" + mail_port
+                + ", mail_user=" + mail_user + ", mail_password=" + mail_password + ", mail_protocol=" + mail_protocol
+                + ", mail_tls=" + mail_tls + ", mail_auth=" + mail_auth + ", mail_target=" + mail_target
+                + ", mail_subject=" + mail_subject + "]";
+    }
 }
