@@ -83,7 +83,7 @@ public class HomeController {
     rv.setContextRelative(true);
     rv.setUrl("/configuracioGeneral?okey=true");
 
-    logger.info("Configuració general canviada");
+    logger.info("Configuracio general canviada");
 
     return rv;
   }

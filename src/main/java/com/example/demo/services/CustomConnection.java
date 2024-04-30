@@ -63,7 +63,7 @@ public class CustomConnection {
                 url = "jdbc:mariadb://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port")
                         + (properties.getProperty("schema") != "" ? "/" + properties.getProperty("schema") : "") +
-                        "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
+                        "?user=" + properties.getProperty("user") + "&password=" + CryptService.decrypt(properties.getProperty("password"));
 
                 logger.info("Intentant connectar a " + properties.getProperty("url"));
                 this.connection = DriverManager.getConnection(url);
@@ -72,7 +72,7 @@ public class CustomConnection {
             case "postgresql": {
                 url = "jdbc:postgresql://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
-                        "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
+                        "?user=" + properties.getProperty("user") + "&password=" + CryptService.decrypt(properties.getProperty("password"));
                 this.connection = DriverManager.getConnection(url);
             }
                 break;
@@ -282,7 +282,7 @@ public class CustomConnection {
             sb.delete(sb.length() - 2, sb.length() - 1);
             sb.append(";");
             long executed = st.executeLargeUpdate(sb.toString());
-            logger.info("Inserts executats amb èxit: " + executed);
+            logger.info("Inserts executats amb exit: " + executed);
             return executed;
         } catch (SQLException e) {
             rollback();

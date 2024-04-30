@@ -163,7 +163,7 @@ public class CustomPool {
             c_out.commit();
 
             if (dbconf.getSend_mail()) {
-                EmailService.sendEmail("Servei executat correctament. Tuples rebudes: " + data.size()
+                EmailService.sendEmail("Servei " + dbconf.getName() + " executat correctament. Tuples rebudes: " + data.size()
                         + ". Tuples insertades: " + inserts);
             }
         }

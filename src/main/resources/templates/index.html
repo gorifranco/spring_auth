@@ -51,9 +51,9 @@
                                 <td th:text="${connexio.getDatabaseConfig().getDescription()}"></td>
                                 <td class="ne" th:text="${connexio.getDatabaseConfig().getNextExecution()}"></td>
                                 <td>
-                                    <a th:href="@{'configuraPool/' + __${iterStat.index}__}">Editar connexió</a>
+                                    <a th:href="@{'configuraPool/' + __${iterStat.index}__}"><img style="height: 24px;" src="settings_svg.svg"></a>
                                     <a class="eliminar" th:id="${__${iterStat.index}__}"
-                                        style="color: red; cursor: pointer;">Eliminar connexió</a>
+                                        style="color: red; cursor: pointer;"><img style="height: 24px;" src="delete_svg.svg"></a>
                                 </td>
                             </tr>
                         </tbody>
