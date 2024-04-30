@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.example.demo.config.EmailService;
 import com.example.demo.models.PoolConfig;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -63,6 +62,9 @@ public class CustomPool {
     }
 
     public String run() {
+
+        if(c_in == null || c_out == null) reconect();
+        
         try {
             if (dbconf.getPeriodically_execution()) {
                 runPeriodically();

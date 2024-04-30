@@ -15,7 +15,7 @@ public class ControlGlobalExcepcions extends ResponseEntityExceptionHandler {
         capsaleres.set("Content-Type","application/json");
         return handleExceptionInternal(
                 ex,
-                new Missatge("Resposta a autorException: "+ex.getMessage()),
+                new Missatge("Resposta: "+ex.getMessage()),
                 capsaleres,
                 ex.getCodi(),
                 request);

@@ -3,7 +3,12 @@ package com.example.demo.services;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,9 +18,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -111,7 +124,7 @@ public class CustomConnection {
             case "postgresql":
                 return getAllDataSql();
             case "json":
-                return getAllDataJSON();
+                return (jsonIsFile) ? getAllDataJSONFile() : getAllDataJSONUrl();
             default:
                 break;
         }
@@ -168,7 +181,27 @@ public class CustomConnection {
         return data;
     }
 
-    private ArrayList<HashMap<String, String>> getAllDataJSON() {
+    private ArrayList<HashMap<String, String>> getAllDataJSONUrl() {
+        UncheckedObjectMapper objectMapper = new UncheckedObjectMapper();
+
+        try {
+            HttpRequest request = HttpRequest.newBuilder(URI.create(properties.getProperty("url")))
+                    .header("Accept", "application/json")
+                    .build();
+
+            CompletableFuture<String> responseFuture = HttpClient.newHttpClient()
+                    .sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenApply(HttpResponse::body);
+
+            return objectMapper.readValue(responseFuture.join(), new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            logger.error("Error extracting data from URL: " + e.getMessage());
+            throw new CompletionException(e);
+        }
+    }
+
+    private ArrayList<HashMap<String, String>> getAllDataJSONFile() {
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -179,7 +212,7 @@ public class CustomConnection {
             logger.info("Extracted data from json " + properties.getProperty("url"));
             return data;
         } catch (IOException e) {
-            logger.error("Error extracting data from JSON (CustomConnection ln 161): " + e.getMessage());
+            logger.error("Error extracting data from JSON: " + e.getMessage());
         }
 
         return null;
@@ -192,37 +225,40 @@ public class CustomConnection {
         return data.size();
     }
 
-/*     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
-        long contador = 0;
-        try (Statement st = connection.createStatement()) {
-            logger.info("Trying to insert data in sql " + properties.getProperty("url"));
-            StringBuilder sb = new StringBuilder();
-            for (HashMap<String, String> m : data) {
-                sb.append("insert into ");
-                sb.append(properties.getProperty("table"));
-                sb.append("(");
-                sb.append(properties.getProperty("columns"));
-                sb.append(") value(");
-                for (String col : columns) {
-                    sb.append("\"");
-                    sb.append(m.get(col));
-                    sb.append("\",");
-                }
-                sb.append(")");
-                sb.deleteCharAt(sb.length() - 2); // Eliminar la coma final
-                sb.append(";");
-                System.out.println(sb.toString());
-                st.executeUpdate(sb.toString());
-            }
-            return contador;
-        }catch(SQLException e){
-            logger.error("error creant inserts: " + e.getMessage());
-            throw e;
-        }catch(Exception e){
-            logger.error("Error del bucle: " + e.getMessage());
-            return 1;
-        }
-    } */
+    /*
+     * private long insertDataSql(ArrayList<HashMap<String, String>> data) throws
+     * SQLException {
+     * long contador = 0;
+     * try (Statement st = connection.createStatement()) {
+     * logger.info("Trying to insert data in sql " + properties.getProperty("url"));
+     * StringBuilder sb = new StringBuilder();
+     * for (HashMap<String, String> m : data) {
+     * sb.append("insert into ");
+     * sb.append(properties.getProperty("table"));
+     * sb.append("(");
+     * sb.append(properties.getProperty("columns"));
+     * sb.append(") value(");
+     * for (String col : columns) {
+     * sb.append("\"");
+     * sb.append(m.get(col));
+     * sb.append("\",");
+     * }
+     * sb.append(")");
+     * sb.deleteCharAt(sb.length() - 2); // Eliminar la coma final
+     * sb.append(";");
+     * System.out.println(sb.toString());
+     * st.executeUpdate(sb.toString());
+     * }
+     * return contador;
+     * }catch(SQLException e){
+     * logger.error("error creant inserts: " + e.getMessage());
+     * throw e;
+     * }catch(Exception e){
+     * logger.error("Error del bucle: " + e.getMessage());
+     * return 1;
+     * }
+     * }
+     */
 
     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
         try (Statement st = connection.createStatement()) {
@@ -240,24 +276,24 @@ public class CustomConnection {
                     sb.append("\"");
                     sb.append(m.get(col));
                     sb.append("\",");
-                    if(m.get(col) == null){
-                        sb.deleteCharAt(sb.length()-7);
-                        sb.deleteCharAt(sb.length()-1);
+                    if (m.get(col) == null) {
+                        sb.deleteCharAt(sb.length() - 7);
+                        sb.deleteCharAt(sb.length() - 1);
                     }
                 }
                 sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
                 sb.append("),\n");
             }
-            sb.delete(sb.length()-2, sb.length()-1);
+            sb.delete(sb.length() - 2, sb.length() - 1);
             sb.append(";");
             long executed = st.executeLargeUpdate(sb.toString());
             logger.info("Inserts executats amb èxit: " + executed);
             return executed;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             rollback();
             logger.error("error creant inserts: " + e.getMessage());
             throw e;
-        }catch(Exception e){
+        } catch (Exception e) {
             rollback();
             logger.error("Error del bucle: " + e.getMessage());
             return 1;
@@ -271,7 +307,7 @@ public class CustomConnection {
         } catch (Exception e) {
             return false;
         }
-    } 
+    }
 
     private static boolean pingURL(String url, int timeout) {
         try {
@@ -320,6 +356,18 @@ public class CustomConnection {
                 break;
             default:
                 break;
+        }
+    }
+
+    class UncheckedObjectMapper extends com.fasterxml.jackson.databind.ObjectMapper {
+        /** Parses the given JSON string into a Map. */
+        ArrayList<HashMap<String, String>> readValue(String content) {
+            try {
+                return this.readValue(content, new TypeReference<>() {
+                });
+            } catch (IOException ioe) {
+                throw new CompletionException(ioe);
+            }
         }
     }
 }

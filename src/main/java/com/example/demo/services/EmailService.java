@@ -1,6 +1,5 @@
-package com.example.demo.config;
+package com.example.demo.services;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -8,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-import com.example.demo.services.CryptService;
-
-import java.security.MessageDigest;
-import java.util.Base64;
+import com.example.demo.config.ConfigManager;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.util.Base64;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
@@ -46,8 +43,8 @@ public class HomeController {
       model.addAttribute("logs", CustomLogManager.returnReverseLogHTML());
       model.addAttribute("last_log", CustomLogManager.getLastLog());
     } catch (Exception e) {
-      logger.warn("No s'han pogut carregar els logs de l'aplicació");
-      model.addAttribute("logs", "No s'han pogut carregar els logs de l'aplicació");
+      logger.warn("No s'han pogut carregar els logs de l'aplicacio");
+      model.addAttribute("logs", "No s'han pogut carregar els logs de l'aplicacio");
     }
     return "index";
   }
@@ -116,7 +113,7 @@ public class HomeController {
     rv.setContextRelative(true);
     rv.setUrl("/?okey=true");
 
-    logger.info("Configuració canviada");
+    logger.info("Configuracio canviada");
 
     return rv;
   }
@@ -127,7 +124,7 @@ public class HomeController {
 
     CustomPool pool = MainService.getPool(id);
     if (pool == null) {
-      return "La connexió no existeix.";
+      return "La connexio no existeix.";
     }
     return pool.run();
   }
