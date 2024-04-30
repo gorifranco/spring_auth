@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -17,18 +16,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
 
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -273,12 +267,13 @@ public class CustomConnection {
             for (HashMap<String, String> m : data) {
                 sb.append("(");
                 for (String col : columns) {
-                    sb.append("\"");
-                    sb.append(m.get(col));
-                    sb.append("\",");
-                    if (m.get(col) == null) {
-                        sb.deleteCharAt(sb.length() - 7);
-                        sb.deleteCharAt(sb.length() - 1);
+                    String value = m.get(col);
+                    if (Objects.isNull(value)) {
+                        sb.append("null,");
+                    } else {
+                        sb.append("\"");
+                        sb.append(value);
+                        sb.append("\",");
                     }
                 }
                 sb.deleteCharAt(sb.length() - 1); // Eliminar la coma final
