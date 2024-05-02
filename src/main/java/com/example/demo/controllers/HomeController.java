@@ -56,7 +56,10 @@ public class HomeController {
     modelAndView.addObject("id", id);
 
     if (id >= 0 && id < MainService.poolSize()) {
-      modelAndView.addObject("config", MainService.getPool(id).getDatabaseConfig());
+      PoolConfig pc = MainService.getPool(id).getDatabaseConfig();
+      pc.setDdbb_in_password(CryptService.decrypt(pc.getDdbb_in_password()));
+      pc.setDdbb_out_password(CryptService.decrypt(pc.getDdbb_out_password()));
+      modelAndView.addObject("config", pc);
     }
 
     return modelAndView;
@@ -99,12 +102,8 @@ public class HomeController {
   public RedirectView configuraPool(@ModelAttribute PoolConfig databaseConfig,
       RedirectAttributes redirectAttributes, @PathVariable(value = "id") int id) {
 
-        if(databaseConfig.getDdbb_in_password() != null)
     databaseConfig.setDdbb_in_password(CryptService.encrypt(databaseConfig.getDdbb_in_password()));
-
-    if(databaseConfig.getDdbb_out_password() != null)
     databaseConfig.setDdbb_out_password(CryptService.encrypt(databaseConfig.getDdbb_out_password()));
-
     MainService.updatePoolConfig(id, databaseConfig);
 
     redirectAttributes.addFlashAttribute("config", databaseConfig);
@@ -153,11 +152,11 @@ public class HomeController {
   @PostMapping(value = "new")
   public RedirectView newPool(@ModelAttribute PoolConfig dbconf) {
 
-    if(dbconf.getDdbb_in_password() != null)
-    dbconf.setDdbb_in_password(CryptService.encrypt(dbconf.getDdbb_in_password()));
+    if (dbconf.getDdbb_in_password() != null)
+      dbconf.setDdbb_in_password(CryptService.encrypt(dbconf.getDdbb_in_password()));
 
-    if(dbconf.getDdbb_out_password() != null)
-    dbconf.setDdbb_out_password(CryptService.encrypt(dbconf.getDdbb_out_password()));
+    if (dbconf.getDdbb_out_password() != null)
+      dbconf.setDdbb_out_password(CryptService.encrypt(dbconf.getDdbb_out_password()));
 
     MainService.createPool(dbconf);
     RedirectView rv = new RedirectView();

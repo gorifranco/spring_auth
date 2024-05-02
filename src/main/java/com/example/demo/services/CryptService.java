@@ -23,7 +23,7 @@ public class CryptService {
             byte[] encryptedBytes = cipher.doFinal(plainText.getBytes());
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
-            logger.error("Error encriptant la contrassenya");
+            logger.error("Error encriptant la contrassenya: " + e.getMessage());
             return null;
         }
     }
@@ -37,7 +37,7 @@ public class CryptService {
             byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
             return new String(decryptedBytes);
         } catch (Exception e) {
-            logger.error("Error desencriptant la contrassenya");
+            logger.error("Error desencriptant la contrassenya: " + e.getMessage());
             return null;
         }
     }

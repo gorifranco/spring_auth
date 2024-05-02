@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 import java.io.Serializable;
 
-public class PoolConfig implements Serializable{
+public class PoolConfig implements Serializable {
 
     private String ddbb_in_url;
     private String ddbb_in_type;
@@ -89,7 +89,34 @@ public class PoolConfig implements Serializable{
         return name;
     }
 
+    public void update(PoolConfig poolConfig) {
+        this.ddbb_in_url = poolConfig.ddbb_in_url;
+        this.ddbb_in_type = poolConfig.ddbb_in_type;
+        this.ddbb_in_user = poolConfig.ddbb_in_user;
+        this.ddbb_in_port = poolConfig.ddbb_in_port;
+        this.ddbb_in_schema = poolConfig.ddbb_in_schema;
+        this.ddbb_in_table = poolConfig.ddbb_in_table;
+        this.ddbb_out_url = poolConfig.ddbb_out_url;
+        this.ddbb_out_type = poolConfig.ddbb_out_type;
+        this.ddbb_out_user = poolConfig.ddbb_out_user;
+        this.ddbb_out_port = poolConfig.ddbb_out_port;
+        this.ddbb_out_schema = poolConfig.ddbb_out_schema;
+        this.ddbb_out_table = poolConfig.ddbb_out_table;
+        this.periodically_execution = poolConfig.periodically_execution;
+        this.time_interval = poolConfig.time_interval;
+        this.time_unit = poolConfig.time_unit;
+        this.send_mail = poolConfig.send_mail;
+        this.name = poolConfig.name;
+        this.description = poolConfig.description;
+        this.ddbb_in_columns = poolConfig.ddbb_in_columns;
+        this.ddbb_out_columns = poolConfig.ddbb_out_columns;
+        this.nextExecution = poolConfig.nextExecution;
 
+        if (poolConfig.ddbb_in_password != null && !poolConfig.ddbb_in_password.isEmpty())
+            this.ddbb_in_password = poolConfig.ddbb_in_password;
+        if (poolConfig.ddbb_out_password != null && !poolConfig.ddbb_out_password.isEmpty())
+            this.ddbb_out_password = poolConfig.ddbb_out_password;
+    }
 
     public String getDdbb_in_columns() {
         return ddbb_in_columns;

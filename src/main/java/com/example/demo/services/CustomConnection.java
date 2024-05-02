@@ -50,21 +50,24 @@ public class CustomConnection {
         }
 
         this.ddbbType = properties.getProperty("type");
-        try {
-            connect();
-        } catch (Exception e) {
+    }
+
+    public void closeConnection(){
+        try{
+            connection.close();
+        }catch(SQLException e){
+            logger.warn("No s'ha pogut tancar la connexió");
         }
     }
 
-    private void connect() throws SQLException {
+    public void connect() throws SQLException {
         String url = "";
         switch (ddbbType) {
             case "mariadb": {
                 url = "jdbc:mariadb://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port")
                         + (properties.getProperty("schema") != "" ? "/" + properties.getProperty("schema") : "") +
-                        "?user=" + properties.getProperty("user") + "&password=" + CryptService.decrypt(properties.getProperty("password"));
-
+                        "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 logger.info("Intentant connectar a " + properties.getProperty("url"));
                 this.connection = DriverManager.getConnection(url);
             }
@@ -72,7 +75,7 @@ public class CustomConnection {
             case "postgresql": {
                 url = "jdbc:postgresql://" + properties.getProperty("url") + ":" +
                         properties.getProperty("port") + "/" + properties.getProperty("schema") +
-                        "?user=" + properties.getProperty("user") + "&password=" + CryptService.decrypt(properties.getProperty("password"));
+                        "?user=" + properties.getProperty("user") + "&password=" + properties.getProperty("password");
                 this.connection = DriverManager.getConnection(url);
             }
                 break;

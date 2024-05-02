@@ -154,6 +154,9 @@ public class CustomPool {
 
     private void updateDB() throws StreamWriteException, DatabindException, SQLException, IOException, Exception {
 
+        c_in.connect();
+        c_out.connect();
+
         if (c_in.ping() && c_out.ping()) {
             c_out.setAutoCommit(false);
 
@@ -167,6 +170,9 @@ public class CustomPool {
                         + ". Tuples insertades: " + inserts);
             }
         }
+
+        c_in.closeConnection();
+        c_out.closeConnection();
     }
     public PoolConfig getDatabaseConfig() {
         return this.dbconf;
@@ -175,7 +181,9 @@ public class CustomPool {
     public void updateConf(PoolConfig poolConfig) {
         this.dbconf = poolConfig;
         reconect();
+
     }
+    
 
     private void reconect(){
         createConnections();
