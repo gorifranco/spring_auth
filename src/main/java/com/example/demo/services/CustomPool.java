@@ -39,7 +39,8 @@ public class CustomPool {
         Properties p_in = new Properties();
         p_in.setProperty("url", dbconf.getDdbb_in_url());
         p_in.setProperty("user", dbconf.getDdbb_in_user());
-        p_in.setProperty("password", dbconf.getDdbb_in_password() != null ? CryptService.decrypt(dbconf.getDdbb_in_password()) : "");
+        p_in.setProperty("password",
+                dbconf.getDdbb_in_password() != null ? CryptService.decrypt(dbconf.getDdbb_in_password()) : "");
         p_in.setProperty("port", dbconf.getDdbb_in_port());
         p_in.setProperty("schema", dbconf.getDdbb_in_schema());
         p_in.setProperty("type", dbconf.getDdbb_in_type());
@@ -51,7 +52,8 @@ public class CustomPool {
         Properties p_out = new Properties();
         p_out.setProperty("url", dbconf.getDdbb_out_url());
         p_out.setProperty("user", dbconf.getDdbb_out_user());
-        p_out.setProperty("password", dbconf.getDdbb_out_password() != null ? CryptService.decrypt(dbconf.getDdbb_out_password()) : "");
+        p_out.setProperty("password",
+                dbconf.getDdbb_out_password() != null ? CryptService.decrypt(dbconf.getDdbb_out_password()) : "");
         p_out.setProperty("port", dbconf.getDdbb_out_port());
         p_out.setProperty("schema", dbconf.getDdbb_out_schema());
         p_out.setProperty("type", dbconf.getDdbb_out_type());
@@ -63,8 +65,9 @@ public class CustomPool {
 
     public String run() {
 
-        if(c_in == null || c_out == null) reconect();
-        
+        if (c_in == null || c_out == null)
+            reconect();
+
         try {
             if (dbconf.getPeriodically_execution()) {
                 runPeriodically();
@@ -98,10 +101,11 @@ public class CustomPool {
                             case "year":
                                 delay = now.until(now.plusYears(time_interval), ChronoUnit.MILLIS);
                         }
-                        updateDB();
                         dbconf.setNextExecution(nextExecution());
+                        updateDB();
                     } catch (Exception e) {
                         logger.error("Error creating runnable: " + e.getMessage());
+                        e.printStackTrace();
                     } finally {
                         executor.schedule(this, delay, TimeUnit.MILLISECONDS);
                     }
@@ -110,7 +114,6 @@ public class CustomPool {
         } catch (Exception e) {
             logger.error("error creating runnable: " + e.getMessage());
         }
-
     }
 
     private String nextExecution() {
@@ -143,6 +146,7 @@ public class CustomPool {
     private void runPeriodically() {
         createRunnable();
         task.run();
+        logger.info("Execution terminated: " + executor.isTerminated());
     }
 
     public void stopService() {
@@ -166,14 +170,16 @@ public class CustomPool {
             c_out.commit();
 
             if (dbconf.getSend_mail()) {
-                EmailService.sendEmail("Servei " + dbconf.getName() + " executat correctament. Tuples rebudes: " + data.size()
-                        + ". Tuples insertades: " + inserts);
+                EmailService.sendEmail(
+                        "Servei " + dbconf.getName() + " executat correctament. Tuples rebudes: " + data.size()
+                                + ". Tuples insertades: " + inserts);
             }
         }
 
         c_in.closeConnection();
         c_out.closeConnection();
     }
+
     public PoolConfig getDatabaseConfig() {
         return this.dbconf;
     }
@@ -183,9 +189,8 @@ public class CustomPool {
         reconect();
 
     }
-    
 
-    private void reconect(){
+    private void reconect() {
         createConnections();
     }
 

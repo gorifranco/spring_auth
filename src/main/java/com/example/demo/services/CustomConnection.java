@@ -52,10 +52,12 @@ public class CustomConnection {
         this.ddbbType = properties.getProperty("type");
     }
 
-    public void closeConnection(){
-        try{
-            connection.close();
-        }catch(SQLException e){
+    public void closeConnection() {
+        try {
+            if (connection != null
+            )
+                connection.close();
+        } catch (SQLException e) {
             logger.warn("No s'ha pogut tancar la connexió");
         }
     }
@@ -111,7 +113,7 @@ public class CustomConnection {
                     throw new Exception("Fallo garrafal");
             }
         } finally {
-            logger.info("Connection to " + properties.getProperty("url") + " : " + tmp);
+            logger.info("Connexio a  " + properties.getProperty("url") + " : " + tmp);
         }
     }
 
@@ -152,10 +154,10 @@ public class CustomConnection {
         try (Statement st = connection.createStatement()) {
             String sentence = "delete from " + properties.getProperty("table") + ";";
             int result = st.executeUpdate(sentence);
-            logger.info("Dropped data from " + properties.getProperty("url") + ": " + result + " tuples");
+            logger.info("Dades eliminades de  " + properties.getProperty("url") + ": " + result + " tuples");
             return true;
         } catch (SQLException e) {
-            logger.error("Error deleting data from " + properties.getProperty("url") + ": " + e.getMessage());
+            logger.error("Error eliminant les dades de " + properties.getProperty("url") + ": " + e.getMessage());
             throw e;
         }
     }
@@ -206,7 +208,7 @@ public class CustomConnection {
             ArrayList<HashMap<String, String>> data = mapper.readValue(new File(jsonUrl),
                     new TypeReference<ArrayList<HashMap<String, String>>>() {
                     });
-            logger.info("Extracted data from json " + properties.getProperty("url"));
+            logger.info("Dades extretes del json " + properties.getProperty("url"));
             return data;
         } catch (IOException e) {
             logger.error("Error extracting data from JSON: " + e.getMessage());
@@ -259,7 +261,7 @@ public class CustomConnection {
 
     private long insertDataSql(ArrayList<HashMap<String, String>> data) throws SQLException {
         try (Statement st = connection.createStatement()) {
-            logger.info("Trying to insert data in sql " + properties.getProperty("url"));
+            logger.info("Insertant dades a sql " + properties.getProperty("url"));
             logger.info("Tuples: " + data.size());
             StringBuilder sb = new StringBuilder();
             sb.append("insert into ");
